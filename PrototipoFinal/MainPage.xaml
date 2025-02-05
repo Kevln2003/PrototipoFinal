@@ -1,0 +1,71 @@
+﻿<Page
+    x:Class="PrototipoFinal.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrototipoFinal"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+      xmlns:fa="using:FontAwesome.UWP"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="#67b2a2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Grid para la columna de selección y login -->
+        <Grid Grid.Column="0">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#badb30" Offset="0.0"/>
+                    <GradientStop Color="#67b2a2" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Border CornerRadius="10" Margin="20" Padding="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Login" FontSize="24" HorizontalAlignment="Center" 
+                         FontWeight="Bold" Margin="0,0,0,20" Foreground="White"/>
+
+                    <!-- Selección de especialidad -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <fa:FontAwesome Icon="Stethoscope" Width="24" Height="24" 
+                                  Margin="0,0,10,0" Foreground="White"/>
+                        <ComboBox x:Name="EspecialidadComboBox" Width="200" CornerRadius="10">
+                            <ComboBoxItem Content="Pediatría"/>
+                            <ComboBoxItem Content="Medicina Deportiva"/>
+                            <ComboBoxItem Content="Administración"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Campo de Usuario -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <fa:FontAwesome Icon="User" Width="24" Height="24" 
+                                  Margin="0,0,10,0" Foreground="White"/>
+                        <TextBox x:Name="UsuarioTextBox" Width="200" PlaceholderText="Usuario" 
+                            CornerRadius="10"  />
+                    </StackPanel>
+
+                    <!-- Campo de Contraseña -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <fa:FontAwesome Icon="Lock" Width="24" Height="24" 
+                                  Margin="0,0,10,0" Foreground="White"/>
+                        <PasswordBox x:Name="ContrasenaPasswordBox" Width="200" PlaceholderText="Contraseña" 
+                               CornerRadius="10"  />
+                    </StackPanel>
+
+                    <!-- Botón de Iniciar Sesión -->
+                    <Button Width="200" CornerRadius="10" 
+                        Background="#2196F3" Foreground="White" Click="Button_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Icon="SignIn" Width="20" Height="20" 
+                                      Margin="0,0,10,0" Foreground="White"/>
+                            <TextBlock Text="Iniciar Sesión" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
