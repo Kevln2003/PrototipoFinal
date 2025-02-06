@@ -129,6 +129,7 @@
       <DependentUpon>MedicinaDeportiva.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="Models\CedulaValidator.cs" />
     <Compile Include="Models\TimeSlot.cs" />
     <Compile Include="Pediatria\MedicinaPediatrica.xaml.cs">
       <DependentUpon>MedicinaPediatrica.xaml</DependentUpon>

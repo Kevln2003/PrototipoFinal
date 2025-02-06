@@ -7,21 +7,92 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local1="using:PrototipoFinal.Plantilla"
     mc:Ignorable="d"
-    
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
     <Grid>
         <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>
-        <!-- Panel superior para Modulos -->
-        <RowDefinition Height="*"/>
-        <!-- Frame principal ocupa el resto del espacio -->
-    </Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-    <!-- Módulos en la fila superior -->
-    <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1">
-       <!-- <local1:Modulos x:Name="Modulos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
-    </Border>
-    <!-- Contenido principal en el Frame -->
-    <Frame x:Name="ContentFrame" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1">
+            <!-- <local1:Modulos x:Name="Modulos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/> -->
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20" Spacing="10">
+                <TextBlock Text="Ingreso de Paciente" FontSize="24" FontWeight="Bold" Margin="0 0 0 10"/>
+
+                <!-- Campos del formulario -->
+                <!-- Nombre -->
+                <StackPanel>
+                    <TextBox x:Name="txtNombre" Header="Nombre:" PlaceholderText="Ingrese el nombre"/>
+                    <TextBlock x:Name="errorNombre" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                </StackPanel>
+
+                <!-- Apellido -->
+                <StackPanel>
+                    <TextBox x:Name="txtApellido" Header="Apellido:" PlaceholderText="Ingrese el apellido"/>
+                    <TextBlock x:Name="errorApellido" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                </StackPanel>
+
+                <!-- Cédula -->
+                <StackPanel>
+                    <TextBox x:Name="txtCedula" Header="Cédula:" PlaceholderText="Ingrese la cédula" InputScope="Number"/>
+                    <TextBlock x:Name="errorCedula" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                </StackPanel>
+
+                <!-- Fecha de Nacimiento -->
+                <StackPanel>
+                    <DatePicker x:Name="dpFechaNacimiento" Header="Fecha de Nacimiento:" DateChanged="DpFechaNacimiento_DateChanged"/>
+                    <TextBlock x:Name="errorFechaNacimiento" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                </StackPanel>
+
+                <!-- Tipo de Sangre -->
+                <StackPanel>
+                    <ComboBox x:Name="cbTipoSangre" Header="Tipo de Sangre:" PlaceholderText="Seleccione el tipo de sangre">
+                        <ComboBoxItem Content="A+"/>
+                        <ComboBoxItem Content="A-"/>
+                        <ComboBoxItem Content="B+"/>
+                        <ComboBoxItem Content="B-"/>
+                        <ComboBoxItem Content="AB+"/>
+                        <ComboBoxItem Content="AB-"/>
+                        <ComboBoxItem Content="O+"/>
+                        <ComboBoxItem Content="O-"/>
+                    </ComboBox>
+                    <TextBlock x:Name="errorTipoSangre" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                </StackPanel>
+
+                <!-- Discapacidad -->
+                <CheckBox x:Name="cbDiscapacidad" Content="¿Tiene discapacidad?"/>
+
+                <!-- Contacto Celular -->
+                <StackPanel>
+                    <TextBox x:Name="txtContacto" Header="Contacto Celular:" PlaceholderText="Ingrese el número de contacto" InputScope="TelephoneNumber"/>
+                    <TextBlock x:Name="errorContacto" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                </StackPanel>
+
+                <!-- Email -->
+                <StackPanel>
+                    <TextBox x:Name="txtEmail" Header="Email:" PlaceholderText="Ingrese el email" InputScope="EmailSmtpAddress"/>
+                    <TextBlock x:Name="errorEmail" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                </StackPanel>
+
+                <!-- Tutor legal (visible solo si el paciente es menor de 18 años) -->
+                <StackPanel x:Name="pnlTutorLegal" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBox x:Name="txtTutorNombre" Header="Nombre del Tutor Legal:" PlaceholderText="Ingrese el nombre del tutor"/>
+                        <TextBlock x:Name="errorTutorNombre" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBox x:Name="txtTutorContacto" Header="Contacto del Tutor:" PlaceholderText="Ingrese el contacto del tutor" InputScope="TelephoneNumber"/>
+                        <TextBlock x:Name="errorTutorContacto" Foreground="Red" Visibility="Collapsed" Text="Este campo es obligatorio"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Botón para guardar -->
+                <Button x:Name="btnGuardar" Content="Guardar" HorizontalAlignment="Stretch" Click="BtnGuardar_Click"/>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
