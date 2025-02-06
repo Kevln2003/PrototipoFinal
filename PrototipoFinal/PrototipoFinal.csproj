@@ -125,6 +125,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MedicinaDeportiva\FormularioDeMedicinaDeportiva.xaml.cs">
+      <DependentUpon>FormularioDeMedicinaDeportiva.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MedicinaDeportiva\MedicinaDeportiva.xaml.cs">
       <DependentUpon>MedicinaDeportiva.xaml</DependentUpon>
     </Compile>
@@ -135,6 +138,9 @@
     </Compile>
     <Compile Include="Plantilla\Agendamiento.xaml.cs">
       <DependentUpon>Agendamiento.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plantilla\Buscar.xaml.cs">
+      <DependentUpon>Buscar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Plantilla\Modulos.xaml.cs">
       <DependentUpon>Modulos.xaml</DependentUpon>
@@ -169,6 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="MedicinaDeportiva\FormularioDeMedicinaDeportiva.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MedicinaDeportiva\MedicinaDeportiva.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -178,6 +188,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Plantilla\Agendamiento.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Plantilla\Buscar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -192,6 +206,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
