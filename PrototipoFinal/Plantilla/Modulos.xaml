@@ -5,10 +5,137 @@
     xmlns:local="using:PrototipoFinal.Plantilla"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="using:FontAwesome.UWP"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <!-- Navigation Header with Gradient Background -->
+        <Grid Grid.Row="0" Background="#67b2a2">
+            <StackPanel 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Center" 
+                Margin="10">
+
+                <Button x:Name="RegresarButton" 
+                        CornerRadius="10" 
+                        Width="120" 
+                        Height="50" 
+                        Margin="5"
+                        Background="#2196F3" 
+                        Foreground="White"
+                        Click="Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="ArrowLeft" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Regresar" 
+                                   VerticalAlignment="Center" 
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Module Buttons with Consistent Styling -->
+                <Button Width="Auto" 
+                        CornerRadius="10" 
+                        Height="50" 
+                        Margin="5"
+                        Background="#4CAF50" 
+                        Foreground="White"
+                        Click="Button_Click_1">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="User" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Ingreso del paciente" 
+                                   VerticalAlignment="Center" 
+                                   Margin="5,0,0,0" 
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="Auto" 
+                        CornerRadius="10" 
+                        Height="50" 
+                        Margin="5"
+                        Background="#FF9800" 
+                        Foreground="White"
+                        Click="Button_Click_2">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="File" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Historia clínica" 
+                                   VerticalAlignment="Center" 
+                                   Margin="5,0,0,0" 
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="Auto"  
+                        CornerRadius="10" 
+                        Height="50" 
+                        Margin="5"
+                        Background="#9C27B0" 
+                        Foreground="White"
+                        Click="Button_Click_3">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="Stethoscope" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Diagnóstico" 
+                                   VerticalAlignment="Center" 
+                                   Margin="5,0,0,0" 
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="Auto" 
+                        CornerRadius="10" 
+                        Height="50" 
+                        Margin="5"
+                        Background="#FF5722" 
+                        Foreground="White"
+                        Click="Button_Click_4">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="Dollar" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Facturación" 
+                                   VerticalAlignment="Center" 
+                                   Margin="5,0,0,0" 
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="Auto" 
+                        CornerRadius="10" 
+                        Height="50" 
+                        Margin="5"
+                        Background="#795548" 
+                        Foreground="White"
+                        Click="Button_Click_5">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="Calendar" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Agendamiento de cita" 
+                                   VerticalAlignment="Center" 
+                                   Margin="5,0,0,0" 
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="Auto" 
+                        CornerRadius="10" 
+                        Height="50" 
+                        Margin="5"
+                        Background="#607D8B" 
+                        Foreground="White"
+                        Click="Button_Click_7">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="QuestionCircle" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Ayuda" 
+                                   VerticalAlignment="Center" 
+                                   Margin="5,0,0,0" 
+                                   Foreground="White"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        
     </Grid>
 </Page>

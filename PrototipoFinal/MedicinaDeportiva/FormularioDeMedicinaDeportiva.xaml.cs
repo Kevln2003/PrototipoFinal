@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using Windows.Storage;
 using PrototipoFinal.Plantilla;
+
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

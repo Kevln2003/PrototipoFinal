@@ -1,0 +1,179 @@
+﻿<Page
+    x:Class="PrototipoFinal.MedicinaDeportiva.FormularioDeSeguimientoDePacienteDepotivo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrototipoFinal.MedicinaDeportiva"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#ffffff" Offset="0"/>
+                <GradientStop Color="#e8f4f1" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid Padding="30" MaxWidth="800">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Seguimiento Medicina Deportiva" 
+                          Foreground="#67b2a2"
+                          FontSize="24"
+                          FontWeight="SemiBold"
+                          Margin="0,0,0,20"/>
+                <Rectangle Height="3" Fill="#badb30" Width="60" 
+                          HorizontalAlignment="Left" Margin="0,0,0,20"/>
+            </StackPanel>
+
+            <Pivot Grid.Row="1">
+                <!-- Información Personal -->
+                <PivotItem Header="Información Personal">
+                    <ScrollViewer>
+                        <StackPanel Padding="0,20">
+                            <TextBox x:Name="txtNombres" 
+                                    Header="Nombres"
+                                    IsReadOnly="True"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtApellidos" 
+                                    Header="Apellidos"
+                                    IsReadOnly="True"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCorreo" 
+                                    Header="Correo Electrónico"
+                                    PlaceholderText="ejemplo@correo.com"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCelular" 
+                                    Header="Celular"
+                                    PlaceholderText="Ingrese su número celular"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCedula" 
+                                    Header="Cédula"
+                                    IsReadOnly="True"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </PivotItem>
+
+                <!-- Antecedentes -->
+                <PivotItem Header="Antecedentes">
+                    <ScrollViewer>
+                        <StackPanel Padding="0,20" Spacing="15">
+                            <TextBlock Text="Antecedentes Familiares" 
+                                     Foreground="#67b2a2"
+                                     FontSize="18"
+                                     FontWeight="SemiBold"/>
+
+                            <TextBox x:Name="txtAntecedentesFamiliares" 
+                                    IsReadOnly="True"
+                                    PlaceholderText="Describa los antecedentes familiares"
+                                    TextWrapping="Wrap"
+                                    AcceptsReturn="True"
+                                    Height="100"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+
+                            <TextBlock Text="Historial Deportivo" 
+                                     Foreground="#67b2a2"
+                                     FontSize="18"
+                                     FontWeight="SemiBold"/>
+
+                            <CheckBox x:Name="chkDeportes" 
+                                    Content="¿Ha practicado deportes anteriormente?"
+                                    IsEnabled="False"
+                                    Foreground="#67b2a2"/>
+
+                            <TextBox x:Name="txtDeportesPracticados" 
+                                    Header="Deportes practicados"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap"
+                                    Height="100"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </PivotItem>
+
+                <!-- Medidas Antropométricas -->
+                <PivotItem Header="Medidas Antropométricas">
+                    <ScrollViewer>
+                        <StackPanel Padding="0,20">
+                            <TextBox x:Name="txtPeso" 
+                                    Header="Peso (kg)"
+                                    IsReadOnly="True"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtAltura" 
+                                    Header="Altura (cm)"
+                                    IsReadOnly="True"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtIMC" 
+                                    Header="IMC"
+                                    IsReadOnly="True"
+                                    Margin="0,5,0,15"
+                                    BorderThickness="0,0,0,2"
+                                    BorderBrush="#67b2a2"
+                                    Background="#f5f5f5"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </PivotItem>
+            </Pivot>
+
+            <!-- Botones -->
+            <StackPanel Grid.Row="2" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right" 
+                        Spacing="10"
+                        Margin="0,20,0,0">
+                <Button x:Name="btnGuardar"
+                        Content="Guardar"
+                        Click="GuardarDatos_Click"
+                        Background="#67b2a2"
+                        Foreground="White"
+                        Padding="30,8"/>
+                <Button Content="Cancelar"
+                        Background="#badb30"
+                        Foreground="White"
+                        Padding="30,8" 
+                        Click="Cancelar_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

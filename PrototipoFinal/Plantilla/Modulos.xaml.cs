@@ -22,9 +22,55 @@ namespace PrototipoFinal.Plantilla
     /// </summary>
     public sealed partial class Modulos : Page
     {
+        public event EventHandler<string> NavigationRequested;
+
         public Modulos()
         {
             this.InitializeComponent();
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        { //Al login
+            var frame = Window.Current.Content as Frame;
+            if (frame != null)
+            {
+                frame.Navigate(typeof(MainPage));
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            // Ingreso
+            NavigationRequested?.Invoke(this, "Formulario");
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            //Historia Clinica
+            NavigationRequested?.Invoke(this, "Historial");
+        }
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            //Diagnostico
+            NavigationRequested?.Invoke(this, "Diagnostico");
+        }
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            //Facturacion
+            NavigationRequested?.Invoke(this, "Facturacion");
+        }
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            //Agendamiento
+            NavigationRequested?.Invoke(this, "Agendamiento");
+        }
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            //Aminitracion
+            NavigationRequested?.Invoke(this, "Administracion");
+        }
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

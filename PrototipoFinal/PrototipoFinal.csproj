@@ -128,10 +128,17 @@
     <Compile Include="MedicinaDeportiva\FormularioDeMedicinaDeportiva.xaml.cs">
       <DependentUpon>FormularioDeMedicinaDeportiva.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MedicinaDeportiva\FormularioDeSeguimientoDePacienteDepotivo.xaml.cs">
+      <DependentUpon>FormularioDeSeguimientoDePacienteDepotivo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MedicinaDeportiva\MedicinaDeportiva.xaml.cs">
       <DependentUpon>MedicinaDeportiva.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MedicinaDeportiva\OpcionesMedicinaDeportiva.xaml.cs">
+      <DependentUpon>OpcionesMedicinaDeportiva.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="Models\PacienteDeportivo.cs" />
     <Compile Include="Models\TimeSlot.cs" />
     <Compile Include="Pediatria\MedicinaPediatrica.xaml.cs">
       <DependentUpon>MedicinaPediatrica.xaml</DependentUpon>
@@ -144,6 +151,9 @@
     </Compile>
     <Compile Include="Plantilla\Modulos.xaml.cs">
       <DependentUpon>Modulos.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plantilla\SeguimientoDePacienteBusqueda.xaml.cs">
+      <DependentUpon>SeguimientoDePacienteBusqueda.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -179,7 +189,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MedicinaDeportiva\FormularioDeSeguimientoDePacienteDepotivo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MedicinaDeportiva\MedicinaDeportiva.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MedicinaDeportiva\OpcionesMedicinaDeportiva.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,16 +217,26 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Plantilla\SeguimientoDePacienteBusqueda.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>
+    </PackageReference>
+    <PackageReference Include="HtmlRenderer.PdfSharp">
+      <Version>1.5.0.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="PDFsharp">
+      <Version>6.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

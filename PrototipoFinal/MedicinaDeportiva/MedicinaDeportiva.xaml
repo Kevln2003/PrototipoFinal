@@ -19,7 +19,7 @@
 
     <!-- Módulos en la fila superior -->
     <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1">
-            <!-- <local1:Modulos x:Name="Modulos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
+            <Local2:Modulos x:Name="Modulos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  />
         </Border>
     <!-- Contenido principal en el Frame -->
     <Frame x:Name="ContentFrame" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>

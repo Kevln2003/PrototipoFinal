@@ -63,7 +63,7 @@ namespace PrototipoFinal
             else if (especialidadSeleccionada == "Administración")
             {
                 if(usuario =="Bella" && contrasena =="2022"){
-                    Frame.Navigate(typeof(FormularioDeMedicinaDeportiva));
+                    Frame.Navigate(typeof(Modulos));
                 }
                 else
                 {

@@ -2,22 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using PrototipoFinal.MedicinaDeportiva;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Newtonsoft.Json;
+using PrototipoFinal.MedicinaDeportiva;
+using PrototipoFinal.Models.PrototipoFinal.Models;
 using static PrototipoFinal.MedicinaDeportiva.FormularioDeMedicinaDeportiva;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace PrototipoFinal.Plantilla
 {
@@ -54,8 +48,8 @@ namespace PrototipoFinal.Plantilla
                     resultados = await FormularioDeMedicinaDeportiva.BuscarPorNombre(terminoBusqueda);
                 }
 
-                // Convertir resultados al formato de visualización
-                var resultadosVista = resultados.Select(r => new {
+                var resultadosVista = resultados.Select(r => new
+                {
                     NombreCompleto = $"{r.Nombres} {r.Apellidos}",
                     r.Cedula,
                     FechaRegistro = r.FechaRegistro.ToString("dd/MM/yyyy"),
@@ -88,13 +82,92 @@ namespace PrototipoFinal.Plantilla
 
         private async void GrdResultados_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // Aquí puedes implementar la navegación al detalle del paciente
-            // o mostrar más información en un diálogo
-            dynamic item = e.ClickedItem;
-            await MostrarMensaje("Detalle del Paciente",
-                $"Nombre: {item.NombreCompleto}\n" +
-                $"Cédula: {item.Cedula}\n" +
-                $"IMC: {item.IMC}");
+            try
+            {
+                dynamic item = e.ClickedItem;
+                DatosMedicoDeportivos datos = item.DatosOriginales;
+
+                if (datos == null)
+                {
+                    await MostrarError("No se pudo recuperar la información del paciente.");
+                    return;
+                }
+
+                // Convertir DatosMedicoDeportivos a PacienteDeportivo
+                PacienteDeportivo paciente = new PacienteDeportivo
+                {
+                    Id = Guid.NewGuid().ToString(), // Generar un ID si es necesario
+                    Nombres = datos.Nombres ?? "No disponible",
+                    Apellidos = datos.Apellidos ?? "No disponible",
+                    Cedula = datos.Cedula ?? "No disponible",
+                    Correo = datos.Correo ?? "No disponible",
+                    Celular = datos.Celular ?? "No disponible",
+                    Peso = datos.Peso,
+                    Altura = datos.Altura,
+                    IMC = datos.IMC,
+                    FechaRegistro = datos.FechaRegistro
+                };
+
+                var savePicker = new FileSavePicker
+                {
+                    SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                    SuggestedFileName = $"HistorialMedico_{paciente.Cedula}"
+                };
+                savePicker.FileTypeChoices.Add("PDF", new List<string>() { ".pdf" });
+
+                StorageFile pdfFile = await savePicker.PickSaveFileAsync();
+                if (pdfFile != null)
+                {
+                    string pdfContent = GenerarContenidoPDF(paciente);
+
+                    await FileIO.WriteTextAsync(pdfFile, pdfContent);
+
+                    var dialog = new ContentDialog
+                    {
+                        Title = "PDF Generado",
+                        Content = "El informe médico se ha generado correctamente. ¿Desea abrirlo?",
+                        PrimaryButtonText = "Abrir",
+                        SecondaryButtonText = "Cancelar"
+                    };
+
+                    var result = await dialog.ShowAsync();
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        await Launcher.LaunchFileAsync(pdfFile);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await MostrarError($"Error al generar el PDF: {ex.Message}");
+            }
+        }
+
+        private string GenerarContenidoPDF(PacienteDeportivo paciente)
+        {
+            return $@"HISTORIAL MÉDICO DEPORTIVO
+
+INFORMACIÓN PERSONAL
+--------------------
+Nombre Completo: {paciente.Nombres} {paciente.Apellidos}
+Cédula: {paciente.Cedula}
+Correo Electrónico: {paciente.Correo}
+Teléfono: {paciente.Celular}
+
+DATOS FÍSICOS
+-------------
+Peso: {paciente.Peso} kg
+Altura: {paciente.Altura} m
+Índice de Masa Corporal (IMC): {paciente.IMC:F2}
+
+INFORMACIÓN DE REGISTRO
+----------------------
+Fecha de Registro: {paciente.FechaRegistro:dd/MM/yyyy}
+
+Generado el: {DateTime.Now:dd/MM/yyyy HH:mm}
+
+NOTA: Este documento es un resumen informativo.
+Consulte a su médico para un análisis detallado.";
         }
 
         private async Task MostrarError(string mensaje)
