@@ -173,6 +173,12 @@
                         Foreground="White"
                         Padding="30,8" 
                         Click="Cancelar_Click"/>
+                <Button x:Name="Recetar"
+                    Content="Recetar"
+                   
+                    Background="#67b2a2"
+                    Foreground="White"
+                    Padding="30,8" Click="Recetar_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

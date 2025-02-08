@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using PrototipoFinal.Models;
 using PrototipoFinal.Models.PrototipoFinal.Models;
 using static PrototipoFinal.MedicinaDeportiva.FormularioDeMedicinaDeportiva;
+using PrototipoFinal.Plantilla;
 
 namespace PrototipoFinal.MedicinaDeportiva
 {
@@ -142,6 +143,11 @@ namespace PrototipoFinal.MedicinaDeportiva
                 CloseButtonText = "Ok"
             };
             await dialog.ShowAsync();
+        }
+
+        private void Recetar_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(RecetaMedica));
         }
     }
 }

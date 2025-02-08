@@ -1,0 +1,99 @@
+﻿<Page
+    x:Class="PrototipoFinal.Plantilla.RecetaMedica"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrototipoFinal.Plantilla"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+
+
+    <ScrollViewer>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Background="#badb30" Padding="20">
+                <TextBlock Text="Receta Médica"/>
+                <TextBlock Text="Fecha:" x:Name="txtFecha"/>
+            </StackPanel>
+
+            <!-- Información del Paciente -->
+            <StackPanel Grid.Row="1" Margin="0,20">
+                <TextBlock Text="Información del Paciente"/>
+                <Grid Margin="0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Nombre:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,5"/>
+                    <TextBlock x:Name="txtNombrePaciente" Grid.Row="0" Grid.Column="1" Margin="0,0,0,5"/>
+
+                    <TextBlock Text="Cédula:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,5"/>
+                    <TextBlock x:Name="txtCedula" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"/>
+
+                    <TextBlock Text="Celular:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,5"/>
+                    <TextBlock x:Name="txtCelular" Grid.Row="2" Grid.Column="1" Margin="0,0,0,5"/>
+
+                    <TextBlock Text="Diagnóstico:" Grid.Row="3" Grid.Column="0" Margin="0,0,10,5"/>
+                    <TextBox x:Name="txtDiagnostico" Grid.Row="3" Grid.Column="1" Margin="0,0,0,5"
+                             TextWrapping="Wrap" AcceptsReturn="True" Height="60"/>
+                </Grid>
+            </StackPanel>
+
+            <!-- Contenedor de RPs -->
+            <StackPanel Grid.Row="2" x:Name="rpContainer" Margin="0,20,0,0">
+                <TextBlock Text="Prescripción"/>
+
+                <!-- Template para RP e Indicaciones -->
+                <Grid Margin="0,10,0,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBox x:Name="txtRP" Grid.Row="0"
+                            Header="RP:"
+                            TextWrapping="Wrap"
+                            AcceptsReturn="True"
+                            Height="100"
+                            Margin="0,0,0,10"/>
+
+                    <TextBox x:Name="txtIndicaciones" Grid.Row="1"
+                            Header="Indicaciones:"
+                            TextWrapping="Wrap"
+                            AcceptsReturn="True"
+                            Height="100"/>
+                </Grid>
+
+                <Button Content="+ Agregar RP e Indicaciones" 
+                        Click="AgregarRP_Click"/>
+            </StackPanel>
+
+            <!-- Botones de Acción -->
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Generar PDF" 
+ 
+                        Click="GenerarPDF_Click"/>
+                <Button Content="Enviar por WhatsApp"
+                        Background="#25D366"
+                        Foreground="White"
+                        Click="EnviarWhatsApp_Click"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>
