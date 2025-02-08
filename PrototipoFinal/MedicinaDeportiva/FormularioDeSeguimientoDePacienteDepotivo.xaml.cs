@@ -205,9 +205,6 @@ namespace PrototipoFinal.MedicinaDeportiva
             txtNombres.Text = paciente.Nombres;
             txtApellidos.Text = paciente.Apellidos;
             txtCedula.Text = paciente.Cedula;
-            txtPeso.Text = paciente.Peso.ToString("F2");
-            txtAltura.Text = paciente.Altura.ToString("F2");
-            txtIMC.Text = paciente.IMC.ToString("F2");
 
             txtCorreo.Text = paciente.Correo;
             txtCelular.Text = paciente.Celular;
