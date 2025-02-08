@@ -25,6 +25,7 @@ namespace PrototipoFinal.MedicinaDeportiva
         {
             this.InitializeComponent();
             Directory.CreateDirectory(historiasClinicasFolder);
+            CalcularIMCAutomaticamente();
 
         }
 
@@ -254,5 +255,33 @@ namespace PrototipoFinal.MedicinaDeportiva
         {
             Frame.Navigate(typeof(RecetaMedica));
         }
+
+        private void CalcularIMCAutomaticamente()
+        {
+            txtPeso.TextChanged += (s, e) => CalcularIMC();
+            txtAltura.TextChanged += (s, e) => CalcularIMC();
+        }
+        private void CalcularIMC()
+        {
+            try
+            {
+                if (double.TryParse(txtPeso.Text?.Replace(",", "."), out double peso) &&
+                    double.TryParse(txtAltura.Text?.Replace(",", "."), out double altura))
+                {
+                    altura = altura / 100; // Convertir cm a metros
+                    double imc = peso / (altura * altura);
+                    txtIMC.Text = imc.ToString("F2").Replace(",", ".");
+                }
+                else
+                {
+                    txtIMC.Text = "";
+                }
+            }
+            catch
+            {
+                txtIMC.Text = "";
+            }
+        }
+
     }
 }
