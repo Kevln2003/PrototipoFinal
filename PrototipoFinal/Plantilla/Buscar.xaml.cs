@@ -11,7 +11,12 @@ using Windows.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using PrototipoFinal.MedicinaDeportiva;
 using PrototipoFinal.Models.PrototipoFinal.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
 using static PrototipoFinal.MedicinaDeportiva.FormularioDeMedicinaDeportiva;
+using System.Text.RegularExpressions;
 
 namespace PrototipoFinal.Plantilla
 {
@@ -37,7 +42,7 @@ namespace PrototipoFinal.Plantilla
                     return;
                 }
 
-                List<DatosMedicoDeportivos> resultados;
+                List<PacienteDeportivo> resultados;
 
                 if (cmbTipoBusqueda.SelectedIndex == 0) // Búsqueda por cédula
                 {
@@ -69,7 +74,92 @@ namespace PrototipoFinal.Plantilla
                 await MostrarError($"Error al realizar la búsqueda: {ex.Message}");
             }
         }
+        private async Task ConvertirTXTaPDFConITextSharp(string txtPath, string pdfPath)
+        {
+            try
+            {
+                string contenido = await File.ReadAllTextAsync(txtPath);
+                using (FileStream fs = new FileStream(pdfPath, FileMode.Create))
+                {
+                    Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+                    PdfWriter writer = PdfWriter.GetInstance(document, fs);
 
+                    document.Open();
+
+                    // Agregar título
+                    Font titleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+                    Paragraph titulo = new Paragraph("HISTORIA CLÍNICA DEPORTIVA", titleFont);
+                    titulo.Alignment = Element.ALIGN_CENTER;
+                    titulo.SpacingAfter = 20f;
+                    document.Add(titulo);
+
+                    // Agregar contenido
+                    Font contentFont = new Font(Font.FontFamily.HELVETICA, 12);
+                    foreach (string linea in contenido.Split('\n'))
+                    {
+                        Paragraph p = new Paragraph(linea, contentFont);
+                        p.SpacingAfter = 10f;
+                        document.Add(p);
+                    }
+
+                    // Agregar pie de página
+                    Font footerFont = new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC);
+                    Paragraph footer = new Paragraph($"Documento generado el: {DateTime.Now:dd/MM/yyyy HH:mm:ss}", footerFont);
+                    footer.Alignment = Element.ALIGN_RIGHT;
+                    document.Add(footer);
+
+                    document.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al convertir a PDF con iTextSharp: {ex.Message}");
+            }
+        }
+        // Método para enviar por WhatsApp
+        private async Task EnviarPorWhatsApp(PacienteDeportivo paciente, string pdfPath)
+        {
+            try
+            {
+                if (!ValidarCelularEcuatoriano(paciente.Celular))
+                {
+                    await MostrarError("El número de celular no tiene un formato válido ecuatoriano (debe empezar con 09 y tener 10 dígitos).");
+                    return;
+                }
+
+                string numeroWhatsApp = FormatearNumeroWhatsApp(paciente.Celular);
+                string whatsappUrl = $"https://wa.me/{numeroWhatsApp}";
+
+                ContentDialog dialog = new ContentDialog
+                {
+                    Title = "Enviar Historia Clínica",
+                    Content = $"Se abrirá WhatsApp Web para enviar el documento al número {paciente.Celular}.\n\nEl PDF se ha guardado en:\n{pdfPath}",
+                    PrimaryButtonText = "Abrir WhatsApp",
+                    SecondaryButtonText = "Cancelar"
+                };
+
+                var result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    await Launcher.LaunchUriAsync(new Uri(whatsappUrl));
+                }
+            }
+            catch (Exception ex)
+            {
+                await MostrarError($"Error al preparar el envío: {ex.Message}");
+            }
+        }
+        private bool ValidarCelularEcuatoriano(string numero)
+        {
+            numero = Regex.Replace(numero, @"[\s\-\(\)]", "");
+            return Regex.IsMatch(numero, @"^09\d{8}$");
+        }
+
+        private string FormatearNumeroWhatsApp(string numero)
+        {
+            numero = Regex.Replace(numero, @"[^\d]", "");
+            return numero.StartsWith("0") ? "593" + numero.Substring(1) : numero;
+        }
         private void CmbTipoBusqueda_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (txtBusqueda != null)
@@ -85,7 +175,7 @@ namespace PrototipoFinal.Plantilla
             try
             {
                 dynamic item = e.ClickedItem;
-                DatosMedicoDeportivos datos = item.DatosOriginales;
+                PacienteDeportivo datos = item.DatosOriginales;
 
                 if (datos == null)
                 {

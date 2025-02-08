@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.Graphics.Printing;
 using static PrototipoFinal.MedicinaDeportiva.FormularioDeMedicinaDeportiva;
 using PrototipoFinal.MedicinaDeportiva;
+using PrototipoFinal.Models.PrototipoFinal.Models;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -41,7 +42,7 @@ namespace PrototipoFinal.Plantilla
                     return;
                 }
 
-                List<DatosMedicoDeportivos> resultados;
+                List<PacienteDeportivo> resultados;
 
                 if (cmbTipoBusqueda.SelectedIndex == 0) // Búsqueda por cédula
                 {
@@ -88,7 +89,7 @@ namespace PrototipoFinal.Plantilla
         {
 
             dynamic item = e.ClickedItem;
-            DatosMedicoDeportivos datosCompletos = item.DatosOriginales;
+            PacienteDeportivo datosCompletos = item.DatosOriginales;
 
             // Navigate to FormularioSeguimiento and pass the patient data
             Frame.Navigate(typeof(FormularioDeSeguimientoDePacienteDepotivo), datosCompletos);

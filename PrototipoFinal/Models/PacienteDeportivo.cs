@@ -11,6 +11,7 @@ namespace PrototipoFinal.Models
     {
         public class PacienteDeportivo
         {
+
             [JsonProperty("id")]
             public string Id { get; set; }
 
@@ -29,6 +30,15 @@ namespace PrototipoFinal.Models
             [JsonProperty("cedula")]
             public string Cedula { get; set; }
 
+            [JsonProperty("antecedentesFamiliares")]
+            public string AntecedentesFamiliares { get; set; }
+
+            [JsonProperty("haPracticadoDeportes")]
+            public bool HaPracticadoDeportes { get; set; }
+
+            [JsonProperty("deportesPracticados")]
+            public string DeportesPracticados { get; set; }
+
             [JsonProperty("peso")]
             public double Peso { get; set; }
 
@@ -41,5 +51,6 @@ namespace PrototipoFinal.Models
             [JsonProperty("fechaRegistro")]
             public DateTime FechaRegistro { get; set; }
         }
+
     }
 }

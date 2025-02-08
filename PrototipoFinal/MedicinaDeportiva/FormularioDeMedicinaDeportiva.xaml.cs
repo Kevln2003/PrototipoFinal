@@ -7,6 +7,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using PrototipoFinal.Plantilla;
+using PrototipoFinal.Models.PrototipoFinal.Models;
+using System.IO;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -19,90 +21,175 @@ namespace PrototipoFinal.MedicinaDeportiva
     public sealed partial class FormularioDeMedicinaDeportiva : Page
     {
         private ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        private readonly string historiasClinicasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasClinicas");
 
         public FormularioDeMedicinaDeportiva()
         {
             this.InitializeComponent();
             CalcularIMCAutomaticamente();
+            Directory.CreateDirectory(historiasClinicasFolder);
         }
+
         private async void GuardarDatos_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Validar campos requeridos
-                if (string.IsNullOrWhiteSpace(txtNombres.Text) ||
-                    string.IsNullOrWhiteSpace(txtApellidos.Text) ||
-                    string.IsNullOrWhiteSpace(txtCedula.Text))
+                // Validación básica de campos obligatorios
+                if (string.IsNullOrWhiteSpace(txtCorreo.Text) &&
+                    string.IsNullOrWhiteSpace(txtCelular.Text))
                 {
-                    await MostrarError("Los campos Nombres, Apellidos y Cédula son obligatorios.");
+                    await MostrarError("Debe proporcionar al menos un método de contacto.");
                     return;
                 }
 
-                // Validar formato de números
-                double peso = 0;
-                double altura = 0;
-                double imc = 0;
-
-                if (!string.IsNullOrWhiteSpace(txtPeso.Text))
+                // Crear nuevo paciente con los datos del formulario
+                var nuevoPaciente = new PacienteDeportivo
                 {
-                    if (!double.TryParse(txtPeso.Text.Replace(",", "."), out peso))
-                    {
-                        await MostrarError("El formato del peso no es válido. Use solo números (ejemplo: 70.5)");
-                        return;
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(txtAltura.Text))
-                {
-                    if (!double.TryParse(txtAltura.Text.Replace(",", "."), out altura))
-                    {
-                        await MostrarError("El formato de la altura no es válido. Use solo números (ejemplo: 170.5)");
-                        return;
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(txtIMC.Text))
-                {
-                    if (!double.TryParse(txtIMC.Text.Replace(",", "."), out imc))
-                    {
-                        await MostrarError("Error al calcular el IMC");
-                        return;
-                    }
-                }
-
-                // Crear objeto con los datos validados
-                var datos = new DatosMedicoDeportivos
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Nombres = txtNombres.Text.Trim(),
-                    Apellidos = txtApellidos.Text.Trim(),
+                    Nombres = txtNombres.Text?.Trim() ?? "",
+                    Apellidos = txtApellidos.Text?.Trim() ?? "",
+                    Cedula = txtCedula.Text?.Trim() ?? "",
                     Correo = txtCorreo.Text?.Trim() ?? "",
                     Celular = txtCelular.Text?.Trim() ?? "",
-                    Cedula = txtCedula.Text.Trim(),
+                    Peso = double.TryParse(txtPeso.Text?.Replace(",", "."), out double peso) ? peso : 0,
+                    Altura = double.TryParse(txtAltura.Text?.Replace(",", "."), out double altura) ? altura : 0,
+                    IMC = double.TryParse(txtIMC.Text?.Replace(",", "."), out double imc) ? imc : 0,
+                    FechaRegistro = DateTime.Now,
                     AntecedentesFamiliares = txtAntecedentesFamiliares.Text?.Trim() ?? "",
-                    HaPracticadoDeportes = false, // Obtener del CheckBox
-                    DeportesPracticados = txtDeportesPracticados.Text?.Trim() ?? "",
-                    Peso = peso,
-                    Altura = altura,
-                    IMC = imc,
-                    FechaRegistro = DateTime.Now
+                    DeportesPracticados = txtDeportesPracticados.Text?.Trim() ?? ""
                 };
 
                 // Obtener registros existentes
-                var registrosExistentes = ObtenerRegistros();
-                registrosExistentes.Add(datos);
+                var registros = ObtenerRegistros();
+                var registroExistente = registros.FirstOrDefault(r => r.Cedula == nuevoPaciente.Cedula);
 
-                // Guardar en almacenamiento local
-                string jsonDatos = JsonConvert.SerializeObject(registrosExistentes, Formatting.Indented);
+                if (registroExistente != null)
+                {
+                    // Actualizar registro existente
+                    registroExistente.Nombres = nuevoPaciente.Nombres;
+                    registroExistente.Apellidos = nuevoPaciente.Apellidos;
+                    registroExistente.Correo = nuevoPaciente.Correo;
+                    registroExistente.Celular = nuevoPaciente.Celular;
+                    registroExistente.Peso = nuevoPaciente.Peso;
+                    registroExistente.Altura = nuevoPaciente.Altura;
+                    registroExistente.IMC = nuevoPaciente.IMC;
+                    registroExistente.AntecedentesFamiliares = nuevoPaciente.AntecedentesFamiliares;
+                    registroExistente.DeportesPracticados = nuevoPaciente.DeportesPracticados;
+                }
+                else
+                {
+                    // Agregar nuevo registro
+                    registros.Add(nuevoPaciente);
+                }
+
+                // Guardar en LocalSettings
+                string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
                 localSettings.Values["RegistrosMedicos"] = jsonDatos;
 
-                await MostrarMensaje("Éxito", "Los datos han sido guardados correctamente.");
+                // Generar/Actualizar archivo TXT de historia clínica
+                await GenerarHistoriaClinicaTXT(registroExistente ?? nuevoPaciente);
+
+
+                await MostrarArchivoTXT(nuevoPaciente.Cedula);
                 LimpiarFormulario();
+                Frame.GoBack();
             }
             catch (Exception ex)
             {
                 await MostrarError($"Error al guardar los datos: {ex.Message}");
             }
+        }
+        private async Task MostrarArchivoTXT(string cedula)
+        {
+            try
+            {
+                string rutaArchivo = Path.Combine(historiasClinicasFolder, $"HC_{cedula}.txt");
+
+                if (File.Exists(rutaArchivo))
+                {
+                    string contenido = await File.ReadAllTextAsync(rutaArchivo);
+
+                    var dialog = new ContentDialog
+                    {
+                        Title = "Historia Clínica Generada",
+                        Content = new ScrollViewer
+                        {
+                            Content = new TextBlock
+                            {
+                                Text = contenido,
+                                TextWrapping = TextWrapping.Wrap,
+                                FontSize = 14
+                            },
+                            Height = 400
+                        },
+                        CloseButtonText = "Cerrar"
+                    };
+
+                    await dialog.ShowAsync();
+                }
+                else
+                {
+                    await MostrarError("No se encontró la historia clínica generada.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await MostrarError($"Error al abrir el archivo: {ex.Message}");
+            }
+        }
+
+        private async Task GenerarHistoriaClinicaTXT(PacienteDeportivo paciente)
+        {
+            string nombreArchivo = Path.Combine(historiasClinicasFolder, $"HC_{paciente.Cedula}.txt");
+
+            using (StreamWriter writer = new StreamWriter(nombreArchivo, false))
+            {
+                writer.WriteLine("HISTORIA CLÍNICA DEPORTIVA");
+                writer.WriteLine("==========================");
+                writer.WriteLine($"Fecha de Actualización: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
+                writer.WriteLine();
+
+                // Datos personales
+                writer.WriteLine("DATOS PERSONALES");
+                writer.WriteLine("----------------");
+                writer.WriteLine($"Nombres: {paciente.Nombres}");
+                writer.WriteLine($"Apellidos: {paciente.Apellidos}");
+                writer.WriteLine($"Cédula: {paciente.Cedula}");
+                writer.WriteLine($"Correo: {paciente.Correo}");
+                writer.WriteLine($"Celular: {paciente.Celular}");
+                writer.WriteLine();
+
+                // Datos médicos y antropométricos
+                writer.WriteLine("DATOS MÉDICOS Y ANTROPOMÉTRICOS");
+                writer.WriteLine("-------------------------------");
+                writer.WriteLine($"Peso: {paciente.Peso:F2} kg");
+                writer.WriteLine($"Altura: {paciente.Altura:F2} m");
+                writer.WriteLine($"IMC: {paciente.IMC:F2}");
+                writer.WriteLine($"Clasificación IMC: {ObtenerClasificacionIMC(paciente.IMC)}");
+                writer.WriteLine();
+
+                // Antecedentes y deportes
+                writer.WriteLine("ANTECEDENTES Y ACTIVIDAD DEPORTIVA");
+                writer.WriteLine("---------------------------------");
+                writer.WriteLine($"Antecedentes Familiares: {paciente.AntecedentesFamiliares}");
+                writer.WriteLine($"Deportes Practicados: {paciente.DeportesPracticados}");
+                writer.WriteLine();
+
+                // Información de registro
+                writer.WriteLine("INFORMACIÓN DE REGISTRO");
+                writer.WriteLine("----------------------");
+                writer.WriteLine($"Fecha de Registro Inicial: {paciente.FechaRegistro:dd/MM/yyyy}");
+                writer.WriteLine($"Última Actualización: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
+            }
+        }
+
+        private string ObtenerClasificacionIMC(double imc)
+        {
+            if (imc < 18.5) return "Bajo peso";
+            if (imc < 25) return "Peso normal";
+            if (imc < 30) return "Sobrepeso";
+            if (imc < 35) return "Obesidad grado I";
+            if (imc < 40) return "Obesidad grado II";
+            return "Obesidad grado III";
         }
 
         // Métodos auxiliares para mostrar mensajes
@@ -128,48 +215,6 @@ namespace PrototipoFinal.MedicinaDeportiva
             await dialog.ShowAsync();
         }
 
-        // Modelo de datos para el formulario
-        public class DatosMedicoDeportivos
-        {
-            [JsonProperty("id")]
-            public string Id { get; set; }
-
-            [JsonProperty("nombres")]
-            public string Nombres { get; set; }
-
-            [JsonProperty("apellidos")]
-            public string Apellidos { get; set; }
-
-            [JsonProperty("correo")]
-            public string Correo { get; set; }
-
-            [JsonProperty("celular")]
-            public string Celular { get; set; }
-
-            [JsonProperty("cedula")]
-            public string Cedula { get; set; }
-
-            [JsonProperty("antecedentesFamiliares")]
-            public string AntecedentesFamiliares { get; set; }
-
-            [JsonProperty("haPracticadoDeportes")]
-            public bool HaPracticadoDeportes { get; set; }
-
-            [JsonProperty("deportesPracticados")]
-            public string DeportesPracticados { get; set; }
-
-            [JsonProperty("peso")]
-            public double Peso { get; set; }
-
-            [JsonProperty("altura")]
-            public double Altura { get; set; }
-
-            [JsonProperty("imc")]
-            public double IMC { get; set; }
-
-            [JsonProperty("fechaRegistro")]
-            public DateTime FechaRegistro { get; set; }
-        }
 
 
 
@@ -202,15 +247,15 @@ namespace PrototipoFinal.MedicinaDeportiva
         }
 
 
-        private List<DatosMedicoDeportivos> ObtenerRegistros()
+        private List<PacienteDeportivo> ObtenerRegistros()
         {
             if (localSettings.Values.TryGetValue("RegistrosMedicos", out object value))
             {
                 string json = value.ToString();
-                return JsonConvert.DeserializeObject<List<DatosMedicoDeportivos>>(json) ??
-                       new List<DatosMedicoDeportivos>();
+                return JsonConvert.DeserializeObject<List<PacienteDeportivo>>(json) ??
+                       new List<PacienteDeportivo>();
             }
-            return new List<DatosMedicoDeportivos>();
+            return new List<PacienteDeportivo>();
         }
 
 
@@ -228,32 +273,32 @@ namespace PrototipoFinal.MedicinaDeportiva
             txtIMC.Text = string.Empty;
         }
 
-        public static async Task<List<DatosMedicoDeportivos>> BuscarPorCedula(string cedula)
+        public static async Task<List<PacienteDeportivo>> BuscarPorCedula(string cedula)
         {
             var localSettings = ApplicationData.Current.LocalSettings;
             if (localSettings.Values.TryGetValue("RegistrosMedicos", out object value))
             {
                 string json = value.ToString();
-                var todos = JsonConvert.DeserializeObject<List<DatosMedicoDeportivos>>(json);
+                var todos = JsonConvert.DeserializeObject<List<PacienteDeportivo>>(json);
                 return todos?.Where(x => x.Cedula.Contains(cedula)).ToList() ??
-                       new List<DatosMedicoDeportivos>();
+                       new List<PacienteDeportivo>();
             }
-            return new List<DatosMedicoDeportivos>();
+            return new List<PacienteDeportivo>();
         }
 
-        public static async Task<List<DatosMedicoDeportivos>> BuscarPorNombre(string nombre)
+        public static async Task<List<PacienteDeportivo>> BuscarPorNombre(string nombre)
         {
             var localSettings = ApplicationData.Current.LocalSettings;
             if (localSettings.Values.TryGetValue("RegistrosMedicos", out object value))
             {
                 string json = value.ToString();
-                var todos = JsonConvert.DeserializeObject<List<DatosMedicoDeportivos>>(json);
+                var todos = JsonConvert.DeserializeObject<List<PacienteDeportivo>>(json);
                 return todos?.Where(x =>
                     x.Nombres.ToLower().Contains(nombre.ToLower()) ||
                     x.Apellidos.ToLower().Contains(nombre.ToLower())
-                ).ToList() ?? new List<DatosMedicoDeportivos>();
+                ).ToList() ?? new List<PacienteDeportivo>();
             }
-            return new List<DatosMedicoDeportivos>();
+            return new List<PacienteDeportivo>();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
