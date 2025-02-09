@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using PrototipoFinal.Models;
 using System.Linq;
+using Windows.UI.Xaml.Media;
 
 namespace PrototipoFinal.Plantilla
 {
@@ -15,8 +16,23 @@ namespace PrototipoFinal.Plantilla
 
         private void CrearUsuarioButton_Click(object sender, RoutedEventArgs e)
         {
-            // Lógica para crear usuario...
+            // Crear usuario
+            string nuevoUsuario = NuevoUsuarioTextBox.Text;
+            string nuevaContrasena = NuevaContrasenaPasswordBox.Password;
+            string nuevoNombre = NuevoNombreTextBox.Text;
+            string nuevaEspecialidad = (NuevaEspecialidadComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            if (string.IsNullOrWhiteSpace(nuevoUsuario) || string.IsNullOrWhiteSpace(nuevaContrasena) || string.IsNullOrWhiteSpace(nuevoNombre) || string.IsNullOrWhiteSpace(nuevaEspecialidad))
+            {
+                MostrarMensajeError("Por favor complete todos los campos.");
+                return;
+            }
+
+            var nuevoUsuarioObj = new Usuario(nuevoUsuario, nuevaContrasena, nuevoNombre, nuevaEspecialidad);
+            DataService.AgregarUsuario(nuevoUsuarioObj);
+            MostrarMensajeExito("Usuario creado exitosamente.");
         }
+
 
         private void BuscarUsuarioButton_Click(object sender, RoutedEventArgs e)
         {
@@ -54,12 +70,9 @@ namespace PrototipoFinal.Plantilla
                         {
                             new TextBlock { Text = "Nombre de Usuario: " + usuarioSeleccionado.NombreUsuario },
                             new TextBox { Text = usuarioSeleccionado.Contrasena, PlaceholderText = "Nueva Contraseña" },
-                            new TextBox { Text = usuarioSeleccionado.Nombre, PlaceholderText = "Nuevo Nombre Completo" },
-                            new ComboBox
-                            {
-                                PlaceholderText = "Nueva Especialidad",
-                                SelectedItem = new ComboBoxItem { Content = usuarioSeleccionado.Especialidad }
-                            }
+                            new TextBox { Text = usuarioSeleccionado.Nombre, PlaceholderText = "Nuevo Nombre" },
+                            // Eliminar la opción de modificar especialidad
+                            new TextBlock { Text = "Especialidad: " + usuarioSeleccionado.Especialidad, Foreground = new SolidColorBrush(Windows.UI.Colors.Gray) }
                         }
                     },
                     PrimaryButtonText = "Guardar",
@@ -73,12 +86,11 @@ namespace PrototipoFinal.Plantilla
                     // Lógica para guardar las modificaciones
                     var nuevaContrasena = (dialog.Content as StackPanel).Children[1] as TextBox;
                     var nuevoNombre = (dialog.Content as StackPanel).Children[2] as TextBox;
-                    var nuevaEspecialidad = (dialog.Content as StackPanel).Children[3] as ComboBox;
 
                     // Aquí puedes implementar la lógica para modificar el usuario en DataService
                     usuarioSeleccionado.Contrasena = nuevaContrasena.Text;
                     usuarioSeleccionado.Nombre = nuevoNombre.Text;
-                    usuarioSeleccionado.Especialidad = (nuevaEspecialidad.SelectedItem as ComboBoxItem)?.Content.ToString();
+                    // No se modifica la especialidad
 
                     DataService.ModificarUsuario(usuarioSeleccionado.NombreUsuario, usuarioSeleccionado);
                     MostrarMensajeExito("Usuario modificado exitosamente.");
@@ -106,6 +118,11 @@ namespace PrototipoFinal.Plantilla
                 CloseButtonText = "Aceptar"
             };
             dialog.ShowAsync();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage));
         }
     }
 }

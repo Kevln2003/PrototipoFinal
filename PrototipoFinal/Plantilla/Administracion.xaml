@@ -61,6 +61,12 @@
                             Foreground="White" 
                             Padding="10" 
                             Margin="0,10,0,5"/>
+                    <Button Content="Salir" 
+                        Click="Button_Click" 
+                        Background="#67b2a2" 
+                        Foreground="White" 
+                        Padding="10" 
+                            />
 
                     <GridView x:Name="grdResultados" 
           SelectionMode="Single" 
