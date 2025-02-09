@@ -41,9 +41,9 @@ namespace PrototipoFinal.MedicinaDeportiva
                 {
                     ContentFrame.Navigate(typeof(Agendamiento));
                 }
-                else if (pageType == "Agendamiento")
+                else if (pageType == "Diagnostico")
                 {
-                    ContentFrame.Navigate(typeof(Plantilla.Agendamiento));
+                    ContentFrame.Navigate(typeof(Plantilla.RecetaMedica));
                 }
                 else if (pageType == "Historial")
                 {
