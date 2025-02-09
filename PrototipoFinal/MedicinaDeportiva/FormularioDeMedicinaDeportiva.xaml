@@ -169,6 +169,10 @@
                         Background="#badb30"
                         Foreground="White"
                         Padding="30,8" Click="Button_Click"/>
+                <Button Content="Recetar"
+                    Background="#badb30"
+                    Foreground="White"
+                    Padding="30,8" Click="Button_Click1"/>
             </StackPanel>
         </Grid>
     </Grid>
