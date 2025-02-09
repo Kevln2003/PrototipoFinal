@@ -1,7 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-using System;
+﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using PrototipoFinal.Models;
@@ -18,72 +15,74 @@ namespace PrototipoFinal.Plantilla
 
         private void CrearUsuarioButton_Click(object sender, RoutedEventArgs e)
         {
-            // Crear usuario
-            string nuevoUsuario = NuevoUsuarioTextBox.Text;
-            string nuevaContrasena = NuevaContrasenaPasswordBox.Password;
-            string nuevoNombre = NuevoNombreTextBox.Text;
-            string nuevaEspecialidad = (NuevaEspecialidadComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-
-            if (string.IsNullOrWhiteSpace(nuevoUsuario) || string.IsNullOrWhiteSpace(nuevaContrasena) || string.IsNullOrWhiteSpace(nuevoNombre) || string.IsNullOrWhiteSpace(nuevaEspecialidad))
-            {
-                MostrarMensajeError("Por favor complete todos los campos.");
-                return;
-            }
-
-            var nuevoUsuarioObj = new Usuario(nuevoUsuario, nuevaContrasena, nuevoNombre, nuevaEspecialidad);
-            DataService.AgregarUsuario(nuevoUsuarioObj);
-            MostrarMensajeExito("Usuario creado exitosamente.");
+            // Lógica para crear usuario...
         }
 
         private void BuscarUsuarioButton_Click(object sender, RoutedEventArgs e)
         {
-            // Buscar usuario
             string usuarioModificar = UsuarioModificarTextBox.Text;
+            string especialidadFiltrada = (EspecialidadFiltroComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
 
-            if (string.IsNullOrWhiteSpace(usuarioModificar))
-            {
-                MostrarMensajeError("Por favor ingrese el nombre de usuario a modificar.");
-                return;
-            }
+            var resultados = DataService.ObtenerUsuarios()
+                .Where(u => (string.IsNullOrWhiteSpace(usuarioModificar) || u.NombreUsuario.Contains(usuarioModificar)) &&
+                             (especialidadFiltrada == "Todas" || u.Especialidad == especialidadFiltrada))
+                .ToList();
 
-            var usuario = DataService.ObtenerUsuarios().FirstOrDefault(u => u.NombreUsuario == usuarioModificar);
-            if (usuario != null)
+            if (resultados.Any())
             {
-                // Rellenar campos con datos del usuario
-                NuevaContrasenaModificarTextBox.Text = usuario.Contrasena;
-                NuevoNombreModificarTextBox.Text = usuario.Nombre;
-                NuevaEspecialidadModificarComboBox.SelectedItem = NuevaEspecialidadModificarComboBox.Items
-                    .OfType<ComboBoxItem>()
-                    .FirstOrDefault(item => item.Content.ToString() == usuario.Especialidad);
+                grdResultados.ItemsSource = resultados;
             }
             else
             {
-                MostrarMensajeError("Usuario no encontrado.");
+                MostrarMensajeError("No se encontraron resultados.");
             }
         }
 
-        private void ModificarUsuarioButton_Click(object sender, RoutedEventArgs e)
+        private async void GrdResultados_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // Modificar usuario
-            string usuarioModificar = UsuarioModificarTextBox.Text;
-            string nuevaContrasena = NuevaContrasenaModificarTextBox.Text;
-            string nuevoNombre = NuevoNombreModificarTextBox.Text;
-            string nuevaEspecialidad = (NuevaEspecialidadModificarComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            Usuario usuarioSeleccionado = e.ClickedItem as Usuario;
 
-            if (string.IsNullOrWhiteSpace(usuarioModificar) || string.IsNullOrWhiteSpace(nuevaContrasena) || string.IsNullOrWhiteSpace(nuevoNombre) || string.IsNullOrWhiteSpace(nuevaEspecialidad))
+            if (usuarioSeleccionado != null)
             {
-                MostrarMensajeError("Por favor complete todos los campos.");
-                return;
-            }
+                // Abrir un diálogo para modificar los datos del usuario
+                ContentDialog dialog = new ContentDialog
+                {
+                    Title = "Modificar Usuario",
+                    Content = new StackPanel
+                    {
+                        Children =
+                        {
+                            new TextBlock { Text = "Nombre de Usuario: " + usuarioSeleccionado.NombreUsuario },
+                            new TextBox { Text = usuarioSeleccionado.Contrasena, PlaceholderText = "Nueva Contraseña" },
+                            new TextBox { Text = usuarioSeleccionado.Nombre, PlaceholderText = "Nuevo Nombre Completo" },
+                            new ComboBox
+                            {
+                                PlaceholderText = "Nueva Especialidad",
+                                SelectedItem = new ComboBoxItem { Content = usuarioSeleccionado.Especialidad }
+                            }
+                        }
+                    },
+                    PrimaryButtonText = "Guardar",
+                    SecondaryButtonText = "Cancelar"
+                };
 
-            var usuarioModificado = new Usuario(usuarioModificar, nuevaContrasena, nuevoNombre, nuevaEspecialidad);
-            if (DataService.ModificarUsuario(usuarioModificar, usuarioModificado))
-            {
-                MostrarMensajeExito("Usuario modificado exitosamente.");
-            }
-            else
-            {
-                MostrarMensajeError("Usuario no encontrado.");
+                var result = await dialog.ShowAsync();
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    // Lógica para guardar las modificaciones
+                    var nuevaContrasena = (dialog.Content as StackPanel).Children[1] as TextBox;
+                    var nuevoNombre = (dialog.Content as StackPanel).Children[2] as TextBox;
+                    var nuevaEspecialidad = (dialog.Content as StackPanel).Children[3] as ComboBox;
+
+                    // Aquí puedes implementar la lógica para modificar el usuario en DataService
+                    usuarioSeleccionado.Contrasena = nuevaContrasena.Text;
+                    usuarioSeleccionado.Nombre = nuevoNombre.Text;
+                    usuarioSeleccionado.Especialidad = (nuevaEspecialidad.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+                    DataService.ModificarUsuario(usuarioSeleccionado.NombreUsuario, usuarioSeleccionado);
+                    MostrarMensajeExito("Usuario modificado exitosamente.");
+                }
             }
         }
 
@@ -107,11 +106,6 @@ namespace PrototipoFinal.Plantilla
                 CloseButtonText = "Aceptar"
             };
             dialog.ShowAsync();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(MainPage));
         }
     }
 }

@@ -47,6 +47,14 @@
                     <TextBox x:Name="UsuarioModificarTextBox" 
                               PlaceholderText="Nombre de Usuario a Modificar" 
                               Margin="0,10,0,5"/>
+                    <ComboBox x:Name="EspecialidadFiltroComboBox" 
+                              PlaceholderText="Filtrar por Especialidad" 
+                              Margin="0,10,0,5">
+                        <ComboBoxItem Content="Todas" />
+                        <ComboBoxItem Content="Medicina Deportiva" />
+                        <ComboBoxItem Content="Pediatría" />
+                    </ComboBox>
+
                     <Button Content="Buscar" 
                             Click="BuscarUsuarioButton_Click" 
                             Background="#67b2a2" 
@@ -54,28 +62,28 @@
                             Padding="10" 
                             Margin="0,10,0,5"/>
 
-                    <TextBox x:Name="NuevaContrasenaModificarTextBox" 
-                              PlaceholderText="Nueva Contraseña" 
-                              Margin="0,10,0,5"/>
-                    <TextBox x:Name="NuevoNombreModificarTextBox" 
-                              PlaceholderText="Nuevo Nombre Completo" 
-                              Margin="0,10,0,5"/>
-                    <ComboBox x:Name="NuevaEspecialidadModificarComboBox" 
-                              PlaceholderText="Nueva Especialidad" 
-                              Margin="0,10,0,5">
-                        <ComboBoxItem Content="Medicina Deportiva" />
-                        <ComboBoxItem Content="Pediatría" />
-                    </ComboBox>
-                    <Button Content="Modificar Usuario" 
-                            Click="ModificarUsuarioButton_Click" 
-                            Background="#67b2a2" 
-                            Foreground="White" 
-                            Padding="10"/>
-                    <Button Content="Login" 
-                         
-                        Background="#67b2a2" 
-                        Foreground="White" 
-                        Padding="10" Click="Button_Click"/>
+                    <GridView x:Name="grdResultados" 
+          SelectionMode="Single" 
+          ItemClick="GrdResultados_ItemClick" 
+          IsItemClickEnabled="True" 
+          Margin="0,10,0,5">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#f5f5f5" 
+                    BorderBrush="#67b2a2" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Padding="10" 
+                    Margin="5">
+                                    <TextBlock Text="{Binding Nombre}" 
+                           FontWeight="SemiBold" 
+                           Foreground="#67b2a2" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
                 </StackPanel>
             </PivotItem>
         </Pivot>

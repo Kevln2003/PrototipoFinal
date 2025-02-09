@@ -18,6 +18,7 @@ namespace PrototipoFinal.Models
             public string Nombre { get; set; }
             public string Especialidad { get; set; }
 
+
             public Usuario(string usuario, string contrasena, string nombre, string especialidad)
             {
                 NombreUsuario = usuario;
