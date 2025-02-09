@@ -3,10 +3,81 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PrototipoFinal.Plantilla"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
     <Grid>
+        <Pivot>
+            <PivotItem Header="Crear Usuario">
+                <StackPanel Margin="20">
+                    <TextBlock Text="Crear Usuario" 
+                               FontSize="24" 
+                               FontWeight="SemiBold" 
+                               Foreground="#67b2a2" 
+                               Margin="0,0,0,10"/>
+                    <TextBox x:Name="NuevoUsuarioTextBox" 
+                              PlaceholderText="Nombre de Usuario" 
+                              Margin="0,10,0,5"/>
+                    <PasswordBox x:Name="NuevaContrasenaPasswordBox" 
+                                  PlaceholderText="Contraseña" 
+                                  Margin="0,10,0,5"/>
+                    <TextBox x:Name="NuevoNombreTextBox" 
+                              PlaceholderText="Nombre Completo" 
+                              Margin="0,10,0,5"/>
+                    <ComboBox x:Name="NuevaEspecialidadComboBox" 
+                              PlaceholderText="Especialidad" 
+                              Margin="0,10,0,5">
+                        <ComboBoxItem Content="Medicina Deportiva" />
+                        <ComboBoxItem Content="Pediatría" />
+                    </ComboBox>
+                    <Button Content="Crear Usuario" 
+                            Click="CrearUsuarioButton_Click" 
+                            Background="#67b2a2" 
+                            Foreground="White" 
+                            Padding="10"/>
+                </StackPanel>
+            </PivotItem>
+
+            <PivotItem Header="Modificar Usuario">
+                <StackPanel Margin="20">
+                    <TextBlock Text="Modificar Usuario" 
+                               FontSize="24" 
+                               FontWeight="SemiBold" 
+                               Foreground="#67b2a2" 
+                               Margin="0,0,0,10"/>
+                    <TextBox x:Name="UsuarioModificarTextBox" 
+                              PlaceholderText="Nombre de Usuario a Modificar" 
+                              Margin="0,10,0,5"/>
+                    <Button Content="Buscar" 
+                            Click="BuscarUsuarioButton_Click" 
+                            Background="#67b2a2" 
+                            Foreground="White" 
+                            Padding="10" 
+                            Margin="0,10,0,5"/>
+
+                    <TextBox x:Name="NuevaContrasenaModificarTextBox" 
+                              PlaceholderText="Nueva Contraseña" 
+                              Margin="0,10,0,5"/>
+                    <TextBox x:Name="NuevoNombreModificarTextBox" 
+                              PlaceholderText="Nuevo Nombre Completo" 
+                              Margin="0,10,0,5"/>
+                    <ComboBox x:Name="NuevaEspecialidadModificarComboBox" 
+                              PlaceholderText="Nueva Especialidad" 
+                              Margin="0,10,0,5">
+                        <ComboBoxItem Content="Medicina Deportiva" />
+                        <ComboBoxItem Content="Pediatría" />
+                    </ComboBox>
+                    <Button Content="Modificar Usuario" 
+                            Click="ModificarUsuarioButton_Click" 
+                            Background="#67b2a2" 
+                            Foreground="White" 
+                            Padding="10"/>
+                    <Button Content="Login" 
+                         
+                        Background="#67b2a2" 
+                        Foreground="White" 
+                        Padding="10" Click="Button_Click"/>
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

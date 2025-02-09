@@ -40,7 +40,7 @@ namespace PrototipoFinal
                     ),
                     new Usuario(
                         usuario: "Gringo",
-                        contrasena: "2023",
+                        contrasena: "2022",
                         nombre: "Medico Deportivo",
                         especialidad: "Medicina Deportiva"
                     )
