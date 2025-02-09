@@ -138,10 +138,15 @@
       <DependentUpon>OpcionesMedicinaDeportiva.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="Models\DataService.cs" />
+    <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\PacienteDeportivo.cs" />
     <Compile Include="Models\TimeSlot.cs" />
     <Compile Include="Pediatria\MedicinaPediatrica.xaml.cs">
       <DependentUpon>MedicinaPediatrica.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plantilla\Administracion.xaml.cs">
+      <DependentUpon>Administracion.xaml</DependentUpon>
     </Compile>
     <Compile Include="Plantilla\Agendamiento.xaml.cs">
       <DependentUpon>Agendamiento.xaml</DependentUpon>
@@ -205,6 +210,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pediatria\MedicinaPediatrica.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Plantilla\Administracion.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

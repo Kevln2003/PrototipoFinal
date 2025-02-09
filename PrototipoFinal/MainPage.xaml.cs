@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using PrototipoFinal.Adminitracion;
 using PrototipoFinal.MedicinaDeportiva;
+using PrototipoFinal.Models;
 using PrototipoFinal.Pediatria;
 using PrototipoFinal.Plantilla;
 using Windows.Foundation;
@@ -26,6 +27,7 @@ namespace PrototipoFinal
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private Usuario usuarioActual;
         public MainPage()
         {
             this.InitializeComponent();
@@ -37,45 +39,43 @@ namespace PrototipoFinal
             string usuario = UsuarioTextBox.Text;
             string contrasena = ContrasenaPasswordBox.Password;
 
-            // Validación de credenciales según la especialidad seleccionada
-            if (especialidadSeleccionada == "Medicina Deportiva")
+            // Obtener la lista de usuarios desde DataService
+            var usuarios = DataService.ObtenerUsuarios();
+            var usuarioValidado = usuarios.FirstOrDefault(u => u.NombreUsuario == usuario && u.Contrasena == contrasena);
+
+            // Validación de credenciales
+            if (usuarioValidado != null)
             {
-                if (usuario == "Gringo" && contrasena == "2022")
+                // Verificar si la especialidad seleccionada coincide
+                if (especialidadSeleccionada == usuarioValidado.Especialidad)
                 {
-                    Frame.Navigate(typeof(MedicinaDeportiva.MedicinaDeportiva));
+                    // Navegar a la página correspondiente según la especialidad
+                    switch (especialidadSeleccionada)
+                    {
+                        case "Medicina Deportiva":
+                            Frame.Navigate(typeof(MedicinaDeportiva.MedicinaDeportiva));
+                            break;
+                        case "Pediatría":
+                            Frame.Navigate(typeof(MedicinaPediatrica));
+                            break;
+                        case "Administración":
+                            Frame.Navigate(typeof(Plantilla.Administracion));
+                            break;
+                        default:
+                            MostrarMensajeError("Especialidad no reconocida.");
+                            break;
+                    }
                 }
                 else
                 {
-                    MostrarMensajeError("Usuario o contraseña incorrectos para Medicina Deportiva.");
-                }
-            }
-            else if (especialidadSeleccionada == "Pediatría")
-            {
-                if (usuario == "Luna" && contrasena == "2019")
-                {
-                    Frame.Navigate(typeof(MedicinaPediatrica));
-                }
-                else
-                {
-                    MostrarMensajeError("Usuario o contraseña incorrectos para Pediatría.");
-                }
-            }
-            else if (especialidadSeleccionada == "Administración")
-            {
-                if(usuario =="Bella" && contrasena =="2022"){
-                    Frame.Navigate(typeof(Modulos));
-                }
-                else
-                {
-                    MostrarMensajeError("Usuario o contraseña incorrectos para Pediatría.");
+                    MostrarMensajeError($"El usuario {usuario} no pertenece a la especialidad seleccionada.");
                 }
             }
             else
             {
-                MostrarMensajeError("Por favor seleccione una especialidad.");
+                MostrarMensajeError("Usuario o contraseña incorrectos.");
             }
         }
-
         private void MostrarMensajeError(string mensaje)
         {
             var dialog = new ContentDialog
@@ -86,6 +86,7 @@ namespace PrototipoFinal
             };
             dialog.ShowAsync();
         }
+
         private void Control_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             // Verifica si la tecla presionada es Enter
@@ -99,6 +100,7 @@ namespace PrototipoFinal
                 next?.Focus(FocusState.Keyboard);
             }
         }
+
 
     }
 }
