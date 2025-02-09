@@ -139,11 +139,21 @@
     </Compile>
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\DataService.cs" />
+    <Compile Include="Models\PacientePediatrico.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\PacienteDeportivo.cs" />
     <Compile Include="Models\TimeSlot.cs" />
+    <Compile Include="Pediatria\FormularioDeMedicinaPediatrica.xaml.cs">
+      <DependentUpon>FormularioDeMedicinaPediatrica.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pediatria\FormularioDeSguimientoPediatrico.xaml.cs">
+      <DependentUpon>FormularioDeSguimientoPediatrico.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pediatria\MedicinaPediatrica.xaml.cs">
       <DependentUpon>MedicinaPediatrica.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pediatria\OpcionesPediatria.xaml.cs">
+      <DependentUpon>OpcionesPediatria.xaml</DependentUpon>
     </Compile>
     <Compile Include="Plantilla\Administracion.xaml.cs">
       <DependentUpon>Administracion.xaml</DependentUpon>
@@ -209,7 +219,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pediatria\FormularioDeMedicinaPediatrica.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pediatria\FormularioDeSguimientoPediatrico.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pediatria\MedicinaPediatrica.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pediatria\OpcionesPediatria.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

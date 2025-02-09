@@ -1,0 +1,365 @@
+﻿<Page
+    x:Class="PrototipoFinal.Pediatria.FormularioDeMedicinaPediatrica"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrototipoFinal.Pediatria"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#ffffff" Offset="0"/>
+                <GradientStop Color="#e8f4f1" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid Padding="30" MaxWidth="800">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Pediatría" 
+                      Foreground="#67b2a2"
+                      FontSize="24"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,20"/>
+                <Rectangle Height="3" Fill="#badb30" Width="60" 
+                      HorizontalAlignment="Left" Margin="0,0,0,20"/>
+            </StackPanel>
+
+            <Pivot Grid.Row="1">
+                <!-- Información del Paciente -->
+                <PivotItem Header="Información del Paciente">
+                    <ScrollViewer>
+                        <StackPanel Padding="0,20">
+                            <TextBox x:Name="txtNombrePaciente" 
+                    Header="Nombre del Paciente"
+                    PlaceholderText="Ingrese nombre completo del paciente"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCedulaPaciente" 
+                    Header="Cédula del Paciente"
+                    PlaceholderText="Ingrese cédula del paciente"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCedulaRepresentante" 
+                    Header="Cédula del Representante"
+                    PlaceholderText="Ingrese cédula del representante"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <DatePicker x:Name="dateFechaNacimiento"
+                    Header="Fecha de Nacimiento"
+                    Margin="0,5,0,15"/>
+
+                            <TextBox x:Name="txtNombreRepresentante" 
+                    Header="Nombre del Representante"
+                    PlaceholderText="Ingrese nombre del representante"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCorreoRepresentante" 
+                    Header="Correo del Representante"
+                    PlaceholderText="ejemplo@correo.com"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCelularRepresentante" 
+                    Header="Celular del Representante"
+                    PlaceholderText="Ingrese número celular"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </PivotItem>
+
+                <!-- Control de Vacunas -->
+                <PivotItem Header="Control de Vacunas">
+                    <ScrollViewer>
+                        <ListView x:Name="VacunasList">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding Nombre}" 
+                                                 FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding EdadRecomendada}" 
+                                                 Foreground="Gray"/>
+                                        </StackPanel>
+                                        <DatePicker Grid.Column="1" 
+                                              Date="{Binding FechaAplicacion, Mode=TwoWay}"
+                                              Margin="10,0"/>
+                                        <CheckBox Grid.Column="2" 
+                                            IsChecked="{Binding Aplicada, Mode=TwoWay}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </PivotItem>
+
+                <!-- Consulta Pediátrica -->
+                <!-- Consulta Pediátrica -->
+                <PivotItem Header="Consulta">
+                    <ScrollViewer>
+                        <StackPanel Padding="0,20">
+                            <!-- Signos Vitales -->
+                            <TextBlock Text="Signos Vitales" 
+                      Foreground="#67b2a2"
+                      FontSize="18"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,10"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="txtTemperatura" 
+                        Header="Temperatura (°C)"
+                        PlaceholderText="Ej: 36.5"
+                        Margin="0,5,10,15"
+                        BorderThickness="0,0,0,2"
+                        BorderBrush="#67b2a2"
+                        Background="#f5f5f5"/>
+
+                                <TextBox x:Name="txtFrecuenciaCardiaca" 
+                        Grid.Column="1"
+                        Header="Frecuencia Cardíaca (lpm)"
+                        PlaceholderText="Ej: 80"
+                        Margin="10,5,0,15"
+                        BorderThickness="0,0,0,2"
+                        BorderBrush="#67b2a2"
+                        Background="#f5f5f5"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="txtFrecuenciaRespiratoria" 
+                        Header="Frecuencia Respiratoria (rpm)"
+                        PlaceholderText="Ej: 20"
+                        Margin="0,5,10,15"
+                        BorderThickness="0,0,0,2"
+                        BorderBrush="#67b2a2"
+                        Background="#f5f5f5"/>
+
+                                <TextBox x:Name="txtSaturacion" 
+                        Grid.Column="1"
+                        Header="Saturación O2 (%)"
+                        PlaceholderText="Ej: 98"
+                        Margin="10,5,0,15"
+                        BorderThickness="0,0,0,2"
+                        BorderBrush="#67b2a2"
+                        Background="#f5f5f5"/>
+                            </Grid>
+
+                            <!-- Medidas Antropométricas -->
+                            <TextBlock Text="Medidas Antropométricas" 
+                      Foreground="#67b2a2"
+                      FontSize="18"
+                      FontWeight="SemiBold"
+                      Margin="0,10,0,10"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="txtPeso" 
+                        Header="Peso (kg)"
+                        PlaceholderText="Ingrese el peso"
+                        Margin="0,5,10,15"
+                        BorderThickness="0,0,0,2"
+                        BorderBrush="#67b2a2"
+                        Background="#f5f5f5"/>
+
+                                <TextBox x:Name="txtTalla" 
+                        Grid.Column="1"
+                        Header="Talla (cm)"
+                        PlaceholderText="Ingrese la talla"
+                        Margin="10,5,0,15"
+                        BorderThickness="0,0,0,2"
+                        BorderBrush="#67b2a2"
+                        Background="#f5f5f5"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox x:Name="txtPerimetroCefalico" 
+                        Header="Perímetro Cefálico (cm)"
+                        PlaceholderText="Ingrese PC"
+                        Margin="0,5,10,15"
+                        BorderThickness="0,0,0,2"
+                        BorderBrush="#67b2a2"
+                        Background="#f5f5f5"/>
+
+
+                            </Grid>
+
+                            <!-- Examen Físico -->
+                            <TextBlock Text="Examen Físico" 
+                      Foreground="#67b2a2"
+                      FontSize="18"
+                      FontWeight="SemiBold"
+                      Margin="0,10,0,10"/>
+
+                            <TextBox x:Name="txtPiel" 
+                    Header="Piel y Faneras"
+                    PlaceholderText="Describa estado de piel, color, lesiones..."
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="60"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtCabeza" 
+                    Header="Cabeza y Cuello"
+                    PlaceholderText="Describa hallazgos relevantes..."
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="60"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtTorax" 
+                    Header="Tórax y Cardiopulmonar"
+                    PlaceholderText="Describa hallazgos cardiopulmonares..."
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="60"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtAbdomen" 
+                    Header="Abdomen"
+                    PlaceholderText="Describa hallazgos abdominales..."
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="60"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtExtremidades" 
+                    Header="Extremidades"
+                    PlaceholderText="Describa estado de extremidades..."
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="60"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <TextBox x:Name="txtNeurologico" 
+                    Header="Examen Neurológico"
+                    PlaceholderText="Describa estado neurológico..."
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="60"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <!-- Motivo de Consulta -->
+                            <TextBlock Text="Motivo de Consulta" 
+                      Foreground="#67b2a2"
+                      FontSize="18"
+                      FontWeight="SemiBold"
+                      Margin="0,10,0,10"/>
+
+                            <TextBox x:Name="txtMotivo" 
+                    PlaceholderText="Describa el motivo de consulta"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="100"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+
+                            <!-- Observaciones -->
+                            <TextBox x:Name="txtObservaciones" 
+                    Header="Observaciones Adicionales"
+                    PlaceholderText="Agregue observaciones relevantes"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Height="100"
+                    Margin="0,5,0,15"
+                    BorderThickness="0,0,0,2"
+                    BorderBrush="#67b2a2"
+                    Background="#f5f5f5"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </PivotItem>
+            </Pivot>
+
+            <!-- Botones -->
+            <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="10"
+                    Margin="0,20,0,0">
+                <Button x:Name="btnGuardar"
+                    Content="Guardar"
+                    Click="GuardarDatos_Click"
+                    Background="#67b2a2"
+                    Foreground="White"
+                    Padding="30,8"/>
+                <Button Content="Cancelar"
+                    Background="#badb30"
+                    Foreground="White"
+                    Padding="30,8" 
+                    Click="Cancelar_Click"/>
+                <Button Content="Generar Receta"
+                    Background="#badb30"
+                    Foreground="White"
+                    Padding="30,8" 
+                    Click="GenerarReceta_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
