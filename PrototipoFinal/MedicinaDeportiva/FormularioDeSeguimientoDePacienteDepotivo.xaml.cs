@@ -154,6 +154,12 @@ namespace PrototipoFinal.MedicinaDeportiva
 
                 await MostrarArchivoTXT(pacienteActual.Cedula);
                 Frame.GoBack();
+                await AuditLogger.LogEvent(
+                    "Medicina Deportiva ",
+                    "El doc le dio seguimiento a",
+                    pacienteActual.Nombres
+
+                );
             }
             catch (Exception ex)
             {

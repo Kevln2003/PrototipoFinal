@@ -30,11 +30,12 @@ namespace PrototipoFinal.MedicinaDeportiva
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(FormularioDeMedicinaDeportiva));
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SeguimientoDePacienteBusqueda));
+            Frame.Navigate(typeof(SeguimientoDePacienteBusqueda), "Deportiva");
         }
     }
 }

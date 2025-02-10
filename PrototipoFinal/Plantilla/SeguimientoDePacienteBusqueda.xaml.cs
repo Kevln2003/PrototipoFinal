@@ -12,6 +12,8 @@ using Windows.Graphics.Printing;
 using static PrototipoFinal.MedicinaDeportiva.FormularioDeMedicinaDeportiva;
 using PrototipoFinal.MedicinaDeportiva;
 using PrototipoFinal.Models.PrototipoFinal.Models;
+using PrototipoFinal.Models;
+using PrototipoFinal.Pediatria;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,13 +25,22 @@ namespace PrototipoFinal.Plantilla
     public sealed partial class SeguimientoDePacienteBusqueda : Page
     {
         private ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        private string tipoBusqueda;
 
         public SeguimientoDePacienteBusqueda()
         {
             this.InitializeComponent();
+            this.tipoBusqueda = "Pediatría"; // Valor por defecto
             cmbTipoBusqueda.SelectedIndex = 0;
         }
 
+        // Mantener el constructor existente
+        public SeguimientoDePacienteBusqueda(string tipoBusqueda)
+        {
+            this.InitializeComponent();
+            this.tipoBusqueda = tipoBusqueda;
+            cmbTipoBusqueda.SelectedIndex = 0;
+        }
         private async void BtnBuscar_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -42,31 +53,60 @@ namespace PrototipoFinal.Plantilla
                     return;
                 }
 
-                List<PacienteDeportivo> resultados;
-
-                if (cmbTipoBusqueda.SelectedIndex == 0) // Búsqueda por cédula
+                if (tipoBusqueda == "Deportiva")
                 {
-                    resultados = await FormularioDeMedicinaDeportiva.BuscarPorCedula(terminoBusqueda);
+                    List<PacienteDeportivo> resultadosDeportivos;
+                    if (cmbTipoBusqueda.SelectedIndex == 0) // Búsqueda por cédula
+                    {
+                        resultadosDeportivos = await FormularioDeMedicinaDeportiva.BuscarPorCedula(terminoBusqueda);
+                    }
+                    else // Búsqueda por nombre
+                    {
+                        resultadosDeportivos = await FormularioDeMedicinaDeportiva.BuscarPorNombre(terminoBusqueda);
+                    }
+
+                    // Convertir resultados para la vista
+                    var resultadosVista = resultadosDeportivos.Select(r => new {
+                        NombreCompleto = $"{r.Nombres} {r.Apellidos}",
+                        r.Cedula,
+                        FechaRegistro = r.FechaRegistro.ToString("dd/MM/yyyy"),
+                        IMC = r.IMC.ToString("F2"),
+                        DatosOriginales = r
+                    }).ToList();
+
+                    grdResultados.ItemsSource = resultadosVista;
+
+                    if (!resultadosVista.Any())
+                    {
+                        await MostrarMensaje("Información", "No se encontraron resultados para la búsqueda.");
+                    }
                 }
-                else // Búsqueda por nombre
+                else if (tipoBusqueda == "Pediatría")
                 {
-                    resultados = await FormularioDeMedicinaDeportiva.BuscarPorNombre(terminoBusqueda);
-                }
+                    List<PacientePediatrico> resultadosPediatricos;
+                    if (cmbTipoBusqueda.SelectedIndex == 0) // Búsqueda por cédula
+                    {
+                        resultadosPediatricos = await FormularioDeMedicinaPediatrica.BuscarPorCedula1(terminoBusqueda);
+                    }
+                    else // Búsqueda por nombre
+                    {
+                        resultadosPediatricos = await FormularioDeMedicinaPediatrica.BuscarPorNombre1(terminoBusqueda);
+                    }
 
-                // Convertir resultados al formato de visualización
-                var resultadosVista = resultados.Select(r => new {
-                    NombreCompleto = $"{r.Nombres} {r.Apellidos}",
-                    r.Cedula,
-                    FechaRegistro = r.FechaRegistro.ToString("dd/MM/yyyy"),
-                    IMC = r.IMC.ToString("F2"),
-                    DatosOriginales = r
-                }).ToList();
+                    // Convertir resultados para la vista
+                    var resultadosVista = resultadosPediatricos.Select(r => new {
+                        NombreCompleto = $"{r.NombrePaciente} {r.NombrePaciente}",
+                        r.CedulaPaciente,
+                       // FechaRegistro = r.FechaRegistro.ToString("dd/MM/yyyy"),
+                        DatosOriginales = r
+                    }).ToList();
 
-                grdResultados.ItemsSource = resultadosVista;
+                    grdResultados.ItemsSource = resultadosVista;
 
-                if (!resultados.Any())
-                {
-                    await MostrarMensaje("Información", "No se encontraron resultados para la búsqueda.");
+                    if (!resultadosVista.Any())
+                    {
+                        await MostrarMensaje("Información", "No se encontraron resultados para la búsqueda.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -74,7 +114,6 @@ namespace PrototipoFinal.Plantilla
                 await MostrarError($"Error al realizar la búsqueda: {ex.Message}");
             }
         }
-
         private void CmbTipoBusqueda_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (txtBusqueda != null)

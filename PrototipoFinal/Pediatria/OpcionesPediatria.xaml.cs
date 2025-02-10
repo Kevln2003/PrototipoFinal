@@ -34,7 +34,7 @@ namespace PrototipoFinal.Pediatria
         }
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SeguimientoDePacienteBusqueda));
+            Frame.Navigate(typeof(SeguimientoDePacienteBusqueda), "Pediatría");
         }
     }
 }

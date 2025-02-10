@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using PrototipoFinal.Plantilla;
 using PrototipoFinal.Models.PrototipoFinal.Models;
 using System.IO;
+using PrototipoFinal.Models;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -28,7 +31,9 @@ namespace PrototipoFinal.MedicinaDeportiva
             this.InitializeComponent();
             CalcularIMCAutomaticamente();
             Directory.CreateDirectory(historiasClinicasFolder);
+
         }
+
 
         private async void GuardarDatos_Click(object sender, RoutedEventArgs e)
         {
@@ -92,6 +97,12 @@ namespace PrototipoFinal.MedicinaDeportiva
                 await MostrarArchivoTXT(nuevoPaciente.Cedula);
                 LimpiarFormulario();
                 Frame.GoBack();
+                await AuditLogger.LogEvent(
+                    "Medicina Deportiva ",
+                    "El doctor ingreso un nuevo paciente",
+                    nuevoPaciente.Nombres
+
+                );
             }
             catch (Exception ex)
             {
@@ -247,6 +258,7 @@ namespace PrototipoFinal.MedicinaDeportiva
         }
 
 
+
         private List<PacienteDeportivo> ObtenerRegistros()
         {
             if (localSettings.Values.TryGetValue("RegistrosMedicos", out object value))
@@ -308,6 +320,33 @@ namespace PrototipoFinal.MedicinaDeportiva
         private void Button_Click1(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(RecetaMedica));
+        }
+
+
+        private void txtCelular_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (Validaciones.ValidarCelular(txtCelular.Text))
+            {
+                txtCelular.BorderBrush = new SolidColorBrush(Colors.Green);
+            }
+            else
+            {
+                txtCelular.BorderBrush = new SolidColorBrush(Colors.Red);
+            }
+        }
+
+        private void txtCedula_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (Validaciones.ValidarCedula(txtCedula.Text))
+            {
+                // Cédula válida
+                txtCedula.BorderBrush = new SolidColorBrush(Colors.Green);
+            }
+            else
+            {
+                // Cédula inválida
+                txtCedula.BorderBrush = new SolidColorBrush(Colors.Red);
+            }
         }
     }
 }
