@@ -33,7 +33,7 @@ namespace PrototipoFinal
             this.InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             string especialidadSeleccionada = (EspecialidadComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
             string usuario = UsuarioTextBox.Text;
@@ -53,12 +53,30 @@ namespace PrototipoFinal
                     switch (especialidadSeleccionada)
                     {
                         case "Medicina Deportiva":
+                            await AuditLogger.LogEvent(
+                                "Sistema",
+                                "ingreso de usuario",
+                                usuarioValidado.Nombre
+                                
+                            );
                             Frame.Navigate(typeof(MedicinaDeportiva.MedicinaDeportiva));
                             break;
                         case "Pediatría":
+                            await AuditLogger.LogEvent(
+    "Sistema",
+    "ingreso de usuario",
+    usuarioValidado.Nombre
+
+);
                             Frame.Navigate(typeof(MedicinaPediatrica));
                             break;
                         case "Administración":
+                            await AuditLogger.LogEvent(
+    "Sistema",
+    "ingreso de usuario",
+    usuarioValidado.Nombre
+
+);
                             Frame.Navigate(typeof(Plantilla.Administracion));
                             break;
                         default:

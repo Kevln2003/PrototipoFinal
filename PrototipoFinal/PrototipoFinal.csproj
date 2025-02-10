@@ -138,6 +138,8 @@
       <DependentUpon>OpcionesMedicinaDeportiva.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="Models\AuditEvent.cs" />
+    <Compile Include="Models\AuditLongger.cs" />
     <Compile Include="Models\DataService.cs" />
     <Compile Include="Models\PacientePediatrico.cs" />
     <Compile Include="Models\Usuario.cs" />

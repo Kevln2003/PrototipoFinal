@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using PrototipoFinal.Plantilla;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -33,7 +34,7 @@ namespace PrototipoFinal.Pediatria
         }
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(FormularioDeSguimientoPediatrico));
+            Frame.Navigate(typeof(SeguimientoDePacienteBusqueda));
         }
     }
 }

@@ -4,16 +4,43 @@ using Windows.UI.Xaml.Controls;
 using PrototipoFinal.Models;
 using System.Linq;
 using Windows.UI.Xaml.Media;
+using TheArtOfDev.HtmlRenderer.Adapters;
+using System.Collections.ObjectModel;
 
 namespace PrototipoFinal.Plantilla
 {
     public sealed partial class Administracion : Page
     {
+        private ObservableCollection<AuditEvent> _auditEvents;
+
         public Administracion()
         {
             this.InitializeComponent();
+            _auditEvents = new ObservableCollection<AuditEvent>();
+            AuditListView.ItemsSource = _auditEvents;
+            LoadAuditEvents();
         }
-
+        private async void LoadAuditEvents()
+        {
+            try
+            {
+                var events = await AuditLogger.GetAuditEvents();
+                _auditEvents.Clear();
+                foreach (var auditEvent in events)
+                {
+                    _auditEvents.Add(auditEvent);
+                }
+            }
+            catch (Exception ex)
+            {
+                MostrarMensajeError("No se pudieron cargar los eventos de auditoría.");
+            }
+        }
+        private async void RegistrarEventoAuditoria(string usuario, string accion, string detalles)
+        {
+            await AuditLogger.LogEvent(usuario, accion, detalles);
+            LoadAuditEvents(); // Recargar la lista después de agregar un nuevo evento
+        }
         private void CrearUsuarioButton_Click(object sender, RoutedEventArgs e)
         {
             // Crear usuario
@@ -29,6 +56,10 @@ namespace PrototipoFinal.Plantilla
             }
 
             var nuevoUsuarioObj = new Usuario(nuevoUsuario, nuevaContrasena, nuevoNombre, nuevaEspecialidad);
+            // Registrar el evento de auditoría
+            RegistrarEventoAuditoria("Admin", "Crear Usuario",
+                $"Se creó el usuario {nuevoUsuario} con especialidad {nuevaEspecialidad}");
+
             DataService.AgregarUsuario(nuevoUsuarioObj);
             MostrarMensajeExito("Usuario creado exitosamente.");
         }
@@ -123,6 +154,11 @@ namespace PrototipoFinal.Plantilla
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainPage));
+        }
+
+        private void AuditListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

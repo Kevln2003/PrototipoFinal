@@ -67,7 +67,7 @@
                                 Margin="0,5,0,15"
                                 BorderThickness="0,0,0,2"
                                 BorderBrush="#67b2a2"
-                                Background="#f5f5f5"/>
+                                Background="#f5f5f5" TextChanged="txtEdad_TextChanged"/>
 
                             <TextBox x:Name="txtNombreRepresentante" 
                                 Header="Nombre del Representante"

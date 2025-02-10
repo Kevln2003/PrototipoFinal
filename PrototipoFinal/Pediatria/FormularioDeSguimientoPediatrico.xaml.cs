@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -8,8 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 using PrototipoFinal.Models;
-using System.IO;
-using PrototipoFinal.Plantilla;
+using PrototipoFinal.Models.PrototipoFinal.Models;
 using System.Collections.ObjectModel;
 
 namespace PrototipoFinal.Pediatria
@@ -19,7 +19,7 @@ namespace PrototipoFinal.Pediatria
         private ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         private PacientePediatrico pacienteActual;
         private readonly string historiasClinicasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasClinicasPediatricas");
-        private ObservableCollection<Vacuna> listaVacunas;
+        private ObservableCollection<PacientePediatrico.Vacuna> listaVacunas;
 
         public FormularioDeSguimientoPediatrico()
         {
@@ -35,33 +35,31 @@ namespace PrototipoFinal.Pediatria
             {
                 pacienteActual = paciente;
                 CargarDatosPaciente(paciente);
+                InitializeVacunas();
             }
             else
             {
-                MostrarError("No se encontró información del paciente.");
+                _ = MostrarError("No se encontró información del paciente.");
+                Frame.GoBack();
             }
         }
 
         private void InitializeVacunas()
         {
-            // Initialize as ObservableCollection
-            var vacunasList = pacienteActual?.Vacunas ?? new List<Vacuna>
-        {
-            new Vacuna { Nombre = "BCG", EdadRecomendada = "Al nacer" },
-            new Vacuna { Nombre = "Hepatitis B", EdadRecomendada = "Al nacer" },
-            new Vacuna { Nombre = "Pentavalente", EdadRecomendada = "2, 4, 6 meses" },
-            new Vacuna { Nombre = "Polio", EdadRecomendada = "2, 4, 6 meses" },
-            new Vacuna { Nombre = "Rotavirus", EdadRecomendada = "2, 4 meses" },
-            new Vacuna { Nombre = "Neumococo", EdadRecomendada = "2, 4, 12 meses" },
-            new Vacuna { Nombre = "Influenza", EdadRecomendada = "6 meses, anual" },
-            new Vacuna { Nombre = "MMR", EdadRecomendada = "12 meses" },
-            new Vacuna { Nombre = "Varicela", EdadRecomendada = "12 meses" }
-        };
+            listaVacunas = new ObservableCollection<PacientePediatrico.Vacuna>(
+                pacienteActual.Vacunas ?? new List<PacientePediatrico.Vacuna>
+                {
+                    new PacientePediatrico.Vacuna { Nombre = "BCG", EdadRecomendada = "Al nacer" },
+                    new PacientePediatrico.Vacuna { Nombre = "Hepatitis B", EdadRecomendada = "Al nacer" },
+                    new PacientePediatrico.Vacuna { Nombre = "Pentavalente", EdadRecomendada = "2, 4, 6 meses" },
+                    new PacientePediatrico.Vacuna { Nombre = "Polio", EdadRecomendada = "2, 4, 6 meses" },
+                    new PacientePediatrico.Vacuna { Nombre = "Rotavirus", EdadRecomendada = "2, 4 meses" },
+                    new PacientePediatrico.Vacuna { Nombre = "Neumococo", EdadRecomendada = "2, 4, 12 meses" },
+                    new PacientePediatrico.Vacuna { Nombre = "Influenza", EdadRecomendada = "6 meses, anual" },
+                    new PacientePediatrico.Vacuna { Nombre = "MMR", EdadRecomendada = "12 meses" },
+                    new PacientePediatrico.Vacuna { Nombre = "Varicela", EdadRecomendada = "12 meses" }
+                });
 
-            // Convert to ObservableCollection and assign to class field
-            listaVacunas = new ObservableCollection<Vacuna>(vacunasList);
-
-            // Use the correct name of your ListView control as defined in XAML
             VacunasList.ItemsSource = listaVacunas;
         }
 
@@ -69,247 +67,221 @@ namespace PrototipoFinal.Pediatria
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(txtCorreoRepresentante.Text) &&
-                    string.IsNullOrWhiteSpace(txtCelularRepresentante.Text))
-                {
-                    await MostrarError("Debe proporcionar al menos un método de contacto del representante.");
+                if (!ValidarCamposObligatorios())
                     return;
-                }
 
-                // Create new consultation
-                var nuevaConsulta = new ConsultaPediatrica
-                {
-                    FechaConsulta = DateTime.Now,
-                    Temperatura = decimal.Parse(txtTemperatura.Text),
-                    FrecuenciaCardiaca = int.Parse(txtFrecuenciaCardiaca.Text),
-                    FrecuenciaRespiratoria = int.Parse(txtFrecuenciaRespiratoria.Text),
-                    SaturacionOxigeno = int.Parse(txtSaturacion.Text),
-                    Peso = decimal.Parse(txtPeso.Text),
-                    Talla = decimal.Parse(txtTalla.Text),
-                    PerimetroCefalico = decimal.Parse(txtPerimetroCefalico.Text),
-                    IMC = decimal.Parse(txtIMC.Text),
-                    PielFaneras = txtPiel.Text,
-                    CabezaCuello = txtCabeza.Text,
-                    ToraxCardiopulmonar = txtTorax.Text,
-                    Abdomen = txtAbdomen.Text,
-                    Extremidades = txtExtremidades.Text,
-                    ExamenNeurologico = txtNeurologico.Text,
-                    MotivoConsulta = txtMotivo.Text,
-                    Observaciones = txtObservaciones.Text
-                };
+                var nuevaConsulta = CrearConsultaDesdeFormulario();
 
-                // Update patient data
-                pacienteActual.CorreoRepresentante = txtCorreoRepresentante.Text?.Trim() ?? "";
-                pacienteActual.CelularRepresentante = txtCelularRepresentante.Text?.Trim() ?? "";
-               // pacienteActual.Vacunas = listaVacunas;
-                pacienteActual.Consultas.Add(nuevaConsulta);
+                ActualizarDatosPaciente(nuevaConsulta);
 
-                // Save to LocalSettings
-                var registros = ObtenerRegistros();
-                var registroExistente = registros.FirstOrDefault(r => r.Id == pacienteActual.Id);
+                await GuardarDatosCompletos();
+                await GenerarHistoriaClinicaTXT();
+                await MostrarArchivoTXT();
 
-                if (registroExistente != null)
-                {
-                    registroExistente.CorreoRepresentante = pacienteActual.CorreoRepresentante;
-                    registroExistente.CelularRepresentante = pacienteActual.CelularRepresentante;
-                    registroExistente.Vacunas = pacienteActual.Vacunas;
-                    registroExistente.Consultas.Add(nuevaConsulta); // Update consultations
-                }
-
-                string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
-                localSettings.Values["RegistrosPediatricos"] = jsonDatos;
-
-                // Generate/Update clinical history TXT file
-                await GenerarHistoriaClinicaTXT(pacienteActual);
-                await MostrarArchivoTXT(pacienteActual.Id);
                 Frame.GoBack();
             }
             catch (Exception ex)
             {
-                await MostrarError($"Error al guardar los datos: {ex.Message}");
+                await MostrarError($"Error al guardar: {ex.Message}");
             }
         }
 
-        private async Task GenerarHistoriaClinicaTXT(PacientePediatrico paciente)
+        private bool ValidarCamposObligatorios()
         {
-            string nombreArchivo = Path.Combine(historiasClinicasFolder, $"HC_PED_{paciente.Id}.txt");
-            bool archivoExiste = File.Exists(nombreArchivo);
-
-            using (StreamWriter writer = new StreamWriter(nombreArchivo, true)) // true for append
+            if (string.IsNullOrWhiteSpace(txtCorreoRepresentante.Text) &&
+                string.IsNullOrWhiteSpace(txtCelularRepresentante.Text))
             {
-                if (!archivoExiste)
-                {
-                    // Initial header if file doesn't exist
-                    writer.WriteLine("HISTORIA CLÍNICA PEDIÁTRICA");
-                    writer.WriteLine("===========================");
-                    writer.WriteLine();
+                _ = MostrarError("Debe proporcionar al menos un método de contacto del representante.");
+                return false;
+            }
+            return true;
+        }
 
-                    // Patient information (written only once)
-                    writer.WriteLine("DATOS DEL PACIENTE");
-                    writer.WriteLine("----------------");
-                    writer.WriteLine($"Nombre: {paciente.NombrePaciente}");
-                    writer.WriteLine($"Fecha de Nacimiento: {paciente.FechaNacimiento:dd/MM/yyyy}");
-                    writer.WriteLine();
-                }
+        private PacientePediatrico.Consulta CrearConsultaDesdeFormulario()
+        {
+            return new PacientePediatrico.Consulta
+            {
+                FechaConsulta = DateTime.Now,
+                Temperatura = decimal.Parse(txtTemperatura.Text),
+                FrecuenciaCardiaca = int.Parse(txtFrecuenciaCardiaca.Text),
+                FrecuenciaRespiratoria = int.Parse(txtFrecuenciaRespiratoria.Text),
+                SaturacionOxigeno = int.Parse(txtSaturacion.Text),
+                Peso = decimal.Parse(txtPeso.Text),
+                Talla = decimal.Parse(txtTalla.Text),
+                PerimetroCefalico = decimal.Parse(txtPerimetroCefalico.Text),
+                IMC = CalcularIMC(),
+                PielFaneras = txtPiel.Text,
+                CabezaCuello = txtCabeza.Text,
+                ToraxCardiopulmonar = txtTorax.Text,
+                Abdomen = txtAbdomen.Text,
+                Extremidades = txtExtremidades.Text,
+                ExamenNeurologico = txtNeurologico.Text,
+                MotivoConsulta = txtMotivo.Text,
+                Observaciones = txtObservaciones.Text
+            };
+        }
 
-                // Add new follow-up entry
-                writer.WriteLine("ACTUALIZACIÓN DE SEGUIMIENTO");
-                writer.WriteLine("---------------------------");
-                writer.WriteLine($"Fecha: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
+        private decimal CalcularIMC()
+        {
+            var peso = decimal.Parse(txtPeso.Text);
+            var talla = decimal.Parse(txtTalla.Text) / 100;
+            return peso / (talla * talla);
+        }
+
+        private void ActualizarDatosPaciente(PacientePediatrico.Consulta consulta)
+        {
+            pacienteActual.CorreoRepresentante = txtCorreoRepresentante.Text.Trim();
+            pacienteActual.CelularRepresentante = txtCelularRepresentante.Text.Trim();
+            pacienteActual.Vacunas = listaVacunas.ToList();
+            pacienteActual.Consultas.Add(consulta);
+        }
+
+        private async Task GuardarDatosCompletos()
+        {
+            var registros = ObtenerRegistros();
+            var registroExistente = registros.FirstOrDefault(r => r.Id == pacienteActual.Id);
+
+            if (registroExistente != null)
+            {
+                registros.Remove(registroExistente);
+            }
+            registros.Add(pacienteActual);
+
+            string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
+            localSettings.Values["RegistrosPediatricos"] = jsonDatos;
+            await Task.CompletedTask;
+        }
+
+        private async Task GenerarHistoriaClinicaTXT()
+        {
+            string nombreArchivo = Path.Combine(historiasClinicasFolder, $"HC_PED_{pacienteActual.Id}.txt");
+
+            using (StreamWriter writer = new StreamWriter(nombreArchivo, false)) // Sobreescribir completo
+            {
+                writer.WriteLine("HISTORIA CLÍNICA PEDIÁTRICA ACTUALIZADA");
+                writer.WriteLine("========================================");
+                writer.WriteLine($"Fecha de actualización: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
                 writer.WriteLine();
 
-                var ultimaConsulta = paciente.Consultas.LastOrDefault();
-                if (ultimaConsulta != null)
+                // Datos básicos actualizados
+                writer.WriteLine("[DATOS ACTUALIZADOS DEL PACIENTE]");
+                writer.WriteLine($"Nombre: {pacienteActual.NombrePaciente}");
+                writer.WriteLine($"Fecha Nacimiento: {pacienteActual.FechaNacimiento:dd/MM/yyyy}");
+                writer.WriteLine($"Edad: {CalcularEdad(pacienteActual.FechaNacimiento)}");
+                writer.WriteLine($"Contacto: {pacienteActual.CelularRepresentante} | {pacienteActual.CorreoRepresentante}");
+                writer.WriteLine();
+
+                // Historial completo de consultas
+                writer.WriteLine("[HISTORIAL COMPLETO DE CONSULTAS]");
+                foreach (var consulta in pacienteActual.Consultas.OrderBy(c => c.FechaConsulta))
                 {
-                    writer.WriteLine("Signos Vitales:");
-                    writer.WriteLine($"- Temperatura: {ultimaConsulta.Temperatura}°C");
-                    writer.WriteLine($"- Frecuencia Cardíaca: {ultimaConsulta.FrecuenciaCardiaca} lpm");
-                    writer.WriteLine($"- Frecuencia Respiratoria: {ultimaConsulta.FrecuenciaRespiratoria} rpm");
-                    writer.WriteLine($"- Saturación O2: {ultimaConsulta.SaturacionOxigeno}%");
-                    writer.WriteLine();
-
-                    writer.WriteLine("Medidas Antropométricas:");
-                    writer.WriteLine($"- Peso: {ultimaConsulta.Peso} kg");
-                    writer.WriteLine($"- Talla: {ultimaConsulta.Talla} cm");
-                    writer.WriteLine($"- Perímetro Cefálico: {ultimaConsulta.PerimetroCefalico} cm");
-                    writer.WriteLine($"- IMC: {ultimaConsulta.IMC}");
-                    writer.WriteLine();
-
-                    writer.WriteLine("Examen Físico:");
-                    writer.WriteLine($"- Piel y Faneras: {ultimaConsulta.PielFaneras}");
-                    writer.WriteLine($"- Cabeza y Cuello: {ultimaConsulta.CabezaCuello}");
-                    writer.WriteLine($"- Tórax y Cardiopulmonar: {ultimaConsulta.ToraxCardiopulmonar}");
-                    writer.WriteLine($"- Abdomen: {ultimaConsulta.Abdomen}");
-                    writer.WriteLine($"- Extremidades: {ultimaConsulta.Extremidades}");
-                    writer.WriteLine($"- Examen Neurológico: {ultimaConsulta.ExamenNeurologico}");
-                    writer.WriteLine();
-
-                    writer.WriteLine("Motivo de Consulta:");
-                    writer.WriteLine(ultimaConsulta.MotivoConsulta);
-                    writer.WriteLine();
-
-                    writer.WriteLine("Observaciones:");
-                    writer.WriteLine(ultimaConsulta.Observaciones);
-                    writer.WriteLine();
-                }
-
-                writer.WriteLine("Estado de Vacunación:");
-                foreach (var vacuna in paciente.Vacunas)
-                {
-                    writer.WriteLine($"- {vacuna.Nombre} ({vacuna.EdadRecomendada}): " +
-                        $"{(vacuna.Aplicada ? $"Aplicada el {vacuna.FechaAplicacion:dd/MM/yyyy}" : "Pendiente")}");
+                    writer.WriteLine($"Fecha: {consulta.FechaConsulta:dd/MM/yyyy HH:mm}");
+                    writer.WriteLine($"Motivo: {consulta.MotivoConsulta}");
+                    writer.WriteLine($"Peso: {consulta.Peso} kg | Talla: {consulta.Talla} cm | IMC: {consulta.IMC:F2}");
+                    writer.WriteLine($"Observaciones: {consulta.Observaciones}");
+                    writer.WriteLine(new string('-', 50));
                 }
                 writer.WriteLine();
 
-                writer.WriteLine("------------------------------------------------");
-                writer.WriteLine();
+                // Estado actual de vacunación
+                writer.WriteLine("[VACUNAS APLICADAS]");
+                foreach (var vacuna in pacienteActual.Vacunas.Where(v => v.Aplicada))
+                {
+                    writer.WriteLine($"- {vacuna.Nombre} ({vacuna.EdadRecomendada}) " +
+                        $"Aplicada el: {vacuna.FechaAplicacion:dd/MM/yyyy}");
+                }
             }
         }
-        private void CalcularEdad(DateTime fechaNacimiento)
+
+        private string CalcularEdad(DateTime fechaNacimiento)
         {
             var edad = DateTime.Today - fechaNacimiento;
-            var años = edad.Days / 365; // Calculo de años
-            var meses = (edad.Days % 365) / 30; // Calculo de meses restantes
+            int meses = (int)(edad.TotalDays / 30.4368);
 
-            // Asignar la edad al TextBox
-            txtEdad.Text = $"{años} años" + (meses > 0 ? $" y {meses} meses" : "");
+            if (meses >= 24) return $"{meses / 12} años";
+            if (meses >= 12) return $"{meses / 12} año y {meses % 12} meses";
+            return $"{meses} meses";
         }
 
-private void CargarDatosPaciente(PacientePediatrico paciente)
-{
-    txtNombrePaciente.Text = paciente.NombrePaciente;
-    txtNombreRepresentante.Text = paciente.NombreRepresentante;
-    txtCorreoRepresentante.Text = paciente.CorreoRepresentante;
-    txtCelularRepresentante.Text = paciente.CelularRepresentante;
-    //dateFechaNacimiento.Date = paciente.FechaNacimiento;
+        private void CargarDatosPaciente(PacientePediatrico paciente)
+        {
+            txtNombrePaciente.Text = paciente.NombrePaciente;
+            txtNombreRepresentante.Text = paciente.NombreRepresentante;
+            txtCorreoRepresentante.Text = paciente.CorreoRepresentante;
+            txtCelularRepresentante.Text = paciente.CelularRepresentante;
+             
 
-    // Calcular y mostrar la edad
-    CalcularEdad(paciente.FechaNacimiento);
-
-    // Load last consultation data if exists
-    var ultimaConsulta = paciente.Consultas.LastOrDefault();
-    if (ultimaConsulta != null)
-    {
-        txtPeso.Text = ultimaConsulta.Peso.ToString();
-        txtTalla.Text = ultimaConsulta.Talla.ToString();
-        txtPerimetroCefalico.Text = ultimaConsulta.PerimetroCefalico.ToString();
-        txtIMC.Text = ultimaConsulta.IMC.ToString();
-    }
-
-    // Update vaccines list
-    //listaVacunas = paciente.Vacunas;
-    VacunasList.ItemsSource = listaVacunas;
-}
+            var ultimaConsulta = paciente.Consultas.LastOrDefault();
+            if (ultimaConsulta != null)
+            {
+                txtPeso.Text = ultimaConsulta.Peso.ToString();
+                txtTalla.Text = ultimaConsulta.Talla.ToString();
+                txtPerimetroCefalico.Text = ultimaConsulta.PerimetroCefalico.ToString();
+                txtIMC.Text = ultimaConsulta.IMC.ToString("F2");
+            }
+        }
 
         private List<PacientePediatrico> ObtenerRegistros()
         {
             if (localSettings.Values.TryGetValue("RegistrosPediatricos", out object value))
             {
-                string json = value.ToString();
-                return JsonConvert.DeserializeObject<List<PacientePediatrico>>(json) ??
-                       new List<PacientePediatrico>();
+                return JsonConvert.DeserializeObject<List<PacientePediatrico>>(value.ToString())
+                    ?? new List<PacientePediatrico>();
             }
             return new List<PacientePediatrico>();
         }
 
         private async Task MostrarError(string mensaje)
         {
-            var dialog = new ContentDialog
+            await new ContentDialog
             {
                 Title = "Error",
                 Content = mensaje,
-                CloseButtonText = "Ok"
-            };
-            await dialog.ShowAsync();
+                CloseButtonText = "OK"
+            }.ShowAsync();
         }
 
-        private async Task MostrarArchivoTXT(string id)
+        private async Task MostrarArchivoTXT()
         {
             try
             {
-                string rutaArchivo = Path.Combine(historiasClinicasFolder, $"HC_PED_{id}.txt");
+                string rutaArchivo = Path.Combine(historiasClinicasFolder, $"HC_PED_{pacienteActual.Id}.txt");
+                string contenido = await File.ReadAllTextAsync(rutaArchivo);
 
-                if (File.Exists(rutaArchivo))
+                var dialog = new ContentDialog
                 {
-                    string contenido = await File.ReadAllTextAsync(rutaArchivo);
-
-                    var dialog = new ContentDialog
+                    Title = "Historia Clínica Actualizada",
+                    Content = new ScrollViewer
                     {
-                        Title = "Historia Clínica Pediátrica",
-                        Content = new ScrollViewer
+                        Content = new TextBlock
                         {
-                            Content = new TextBlock
-                            {
-                                Text = contenido,
-                                TextWrapping = TextWrapping.Wrap,
-                                FontSize = 14
-                            },
-                            Height = 400
+                            Text = contenido,
+                            TextWrapping = TextWrapping.Wrap,
+                            FontSize = 14
                         },
-                        CloseButtonText = "Cerrar"
-                    };
+                        Height = 400
+                    },
+                    CloseButtonText = "Cerrar"
+                };
 
-                    await dialog.ShowAsync();
-                }
-                else
-                {
-                    await MostrarError("No se encontró la historia clínica generada.");
-                }
+                await dialog.ShowAsync();
             }
             catch (Exception ex)
             {
-                await MostrarError($"Error al abrir el archivo: {ex.Message}");
+                await MostrarError($"Error al mostrar archivo: {ex.Message}");
             }
+        }
+
+        private void Cancelar_Click(object sender, RoutedEventArgs e) => Frame.GoBack();
+
+        private void txtEdad_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
 
         private void GenerarReceta_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(RecetaMedica));
-        }
-
-        private void Cancelar_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.GoBack();
+            Frame.Navigate(typeof(Plantilla.RecetaMedica));
         }
     }
 }
