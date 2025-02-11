@@ -1,0 +1,108 @@
+﻿<Page
+    x:Class="PrototipoFinal.Plantilla.Factura"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrototipoFinal.Plantilla"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Encabezado -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Facturación"
+                       Foreground="#67b2a2"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,20"/>
+            <Rectangle Height="3" Fill="#badb30" Width="60"
+                       HorizontalAlignment="Left" Margin="0,0,0,20"/>
+        </StackPanel>
+
+        <!-- Contenido de la Factura -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="15">
+                <!-- Datos del Consultorio -->
+                <TextBlock Text="Consultorio Médico Deportivo" 
+                           Foreground="#67b2a2"
+                           FontSize="18"
+                           FontWeight="SemiBold"/>
+                <TextBlock Text="RUC: 1234567890123" 
+                           Foreground="Gray"/>
+                <TextBlock Text="Dirección: Av. Principal 123, Quito" 
+                           Foreground="Gray"/>
+                <TextBlock Text="Teléfono: (02) 123-4567" 
+                           Foreground="Gray"/>
+
+                <!-- Separador -->
+                <Rectangle Height="1" Fill="#67b2a2" Margin="0,20,0,20"/>
+
+                <!-- Campos de la Factura -->
+                <TextBox x:Name="txtNombreCliente" 
+                         Header="Nombre del Cliente"
+                         PlaceholderText="Ingrese el nombre del cliente"
+                         Margin="0,5,0,15"
+                         BorderThickness="0,0,0,2"
+                         BorderBrush="#67b2a2"
+                         Background="#f5f5f5"/>
+
+                <TextBox x:Name="txtDescripcion" 
+                         Header="Descripción"
+                         PlaceholderText="Ingrese la descripción del servicio"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         Height="100"
+                         Margin="0,5,0,15"
+                         BorderThickness="0,0,0,2"
+                         BorderBrush="#67b2a2"
+                         Background="#f5f5f5"/>
+
+                <TextBox x:Name="txtPrecio" 
+                         Header="Precio ($)"
+                         PlaceholderText="Ingrese el precio"
+                         Margin="0,5,0,15"
+                         BorderThickness="0,0,0,2"
+                         BorderBrush="#67b2a2"
+                         Background="#f5f5f5"/>
+
+                <!-- Total -->
+                <TextBlock Text="Total a Pagar:" 
+                           Foreground="#67b2a2"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Margin="0,20,0,10"/>
+                <TextBlock x:Name="txtTotal" 
+                           Text="$0.00"
+                           Foreground="#67b2a2"
+                           FontSize="24"
+                           FontWeight="Bold"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Botones -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="10"
+                    Margin="0,20,0,0">
+            <Button x:Name="btnGenerarFactura"
+                    Content="Generar Factura"
+                    Background="#67b2a2"
+                    Foreground="White"
+                    Padding="30,8"
+                    Click="GenerarFactura_Click"/>
+            <Button Content="Cancelar"
+                    Background="#badb30"
+                    Foreground="White"
+                    Padding="30,8" 
+                    Click="Cancelar_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
