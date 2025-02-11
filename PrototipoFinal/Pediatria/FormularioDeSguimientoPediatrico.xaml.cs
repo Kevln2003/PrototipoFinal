@@ -18,7 +18,7 @@ namespace PrototipoFinal.Pediatria
     {
         private ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         private PacientePediatrico pacienteActual;
-        private readonly string historiasClinicasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasPediatricas");
+        private readonly string historiasClinicasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasPediatricas1");
 
         public FormularioDeSguimientoPediatrico()
         {
@@ -34,15 +34,37 @@ namespace PrototipoFinal.Pediatria
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is PacientePediatrico paciente)
+            // Check for both DatosMedicoDeportivos and PacienteDeportivo
+            if (e.Parameter is PacientePediatrico datosMedicos)
+            {
+                // Convert DatosMedicoDeportivos to PacienteDeportivo
+                pacienteActual = new PacientePediatrico
+                {
+                    Id = datosMedicos.Id,
+                    NombrePaciente = datosMedicos.NombrePaciente,
+                    NombreRepresentante = datosMedicos.NombreRepresentante,
+                    CorreoRepresentante = datosMedicos.CorreoRepresentante,
+                    CelularRepresentante = datosMedicos.CelularRepresentante,
+                    CedulaPaciente = datosMedicos.CedulaPaciente,
+                    CedulaRepresentante = datosMedicos.CedulaRepresentante,
+                    Peso = datosMedicos.Peso,
+                    Talla = datosMedicos.Talla,
+                    IMC = datosMedicos.IMC,
+                    FechaConsulta = datosMedicos.FechaConsulta
+                };
+
+                CargarDatosPaciente(pacienteActual);
+            }
+            else if (e.Parameter is PacientePediatrico paciente)
             {
                 pacienteActual = paciente;
                 CargarDatosPaciente(paciente);
             }
             else
             {
-                MostrarError("No se encontró información del paciente pediátrico.");
+                MostrarError("No se encontró información del paciente.");
             }
+
         }
 
         private void CargarDatosPaciente(PacientePediatrico paciente)
@@ -202,7 +224,7 @@ namespace PrototipoFinal.Pediatria
             }
 
             string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
-            localSettings.Values["RegistrosPediatricos"] = jsonDatos;
+            localSettings.Values["HistoriasPediatricas1"] = jsonDatos;
         }
 
         private async Task MostrarArchivoTXT(string cedula)
@@ -239,7 +261,7 @@ namespace PrototipoFinal.Pediatria
 
         private List<PacientePediatrico> ObtenerRegistros()
         {
-            if (localSettings.Values.TryGetValue("RegistrosPediatricos", out object value))
+            if (localSettings.Values.TryGetValue("HistoriasPediatricas1", out object value))
             {
                 string json = value.ToString();
                 return JsonConvert.DeserializeObject<List<PacientePediatrico>>(json) ??

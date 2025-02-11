@@ -316,7 +316,7 @@ namespace PrototipoFinal.MedicinaDeportiva
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(Buscar));
-        }        
+        }
         private void Button_Click1(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(RecetaMedica));
@@ -348,5 +348,6 @@ namespace PrototipoFinal.MedicinaDeportiva
                 txtCedula.BorderBrush = new SolidColorBrush(Colors.Red);
             }
         }
+
     }
 }

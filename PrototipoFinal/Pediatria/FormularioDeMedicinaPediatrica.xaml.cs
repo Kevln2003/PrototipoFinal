@@ -16,7 +16,7 @@ namespace PrototipoFinal.Pediatria
     public sealed partial class FormularioDeMedicinaPediatrica : Page
     {
         private ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        private readonly string historiasPediatricasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasPediatricas");
+        private readonly string historiasPediatricasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasPediatricas1");
         private List<PacientePediatrico.Vacuna> listaVacunas;
 
         public FormularioDeMedicinaPediatrica()
@@ -118,7 +118,7 @@ namespace PrototipoFinal.Pediatria
 
                 // Guardar en LocalSettings
                 string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
-                localSettings.Values["HistoriasPediatricas"] = jsonDatos;
+                localSettings.Values["HistoriasPediatricas1"] = jsonDatos;
 
                 // Generar/Actualizar archivo TXT de historia clínica
                 await GenerarHistoriaClinicaTXT(nuevoPaciente);
@@ -142,7 +142,7 @@ namespace PrototipoFinal.Pediatria
         {
             try
             {
-                var jsonDatos = localSettings.Values["HistoriasPediatricas"] as string;
+                var jsonDatos = localSettings.Values["HistoriasPediatricas1"] as string;
                 return string.IsNullOrEmpty(jsonDatos)
                     ? new List<PacientePediatrico>()
                     : JsonConvert.DeserializeObject<List<PacientePediatrico>>(jsonDatos);
@@ -205,7 +205,7 @@ namespace PrototipoFinal.Pediatria
             registros.Add(nuevoPaciente);
 
             string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
-            localSettings.Values["HistoriasPediatricas"] = jsonDatos;
+            localSettings.Values["HistoriasPediatricas1"] = jsonDatos;
         }
 
         private int CalcularEdad(DateTime fechaNacimiento)
@@ -291,7 +291,7 @@ namespace PrototipoFinal.Pediatria
         }
         private List<PacientePediatrico> ObtenerRegistrosPediatricos()
         {
-            if (localSettings.Values.TryGetValue("RegistrosPediatricos", out object value))
+            if (localSettings.Values.TryGetValue("HistoriasPediatricas1", out object value))
             {
                 string json = value.ToString();
                 return JsonConvert.DeserializeObject<List<PacientePediatrico>>(json) ??
@@ -348,7 +348,7 @@ namespace PrototipoFinal.Pediatria
         public static async Task<List<PacientePediatrico>> BuscarPorCedula1(string cedula)
         {
             var localSettings = ApplicationData.Current.LocalSettings;
-            if (localSettings.Values.TryGetValue("HistoriasPediatricas", out object value))
+            if (localSettings.Values.TryGetValue("HistoriasPediatricas1", out object value))
             {
                 string json = value.ToString();
                 var todos = JsonConvert.DeserializeObject<List<PacientePediatrico>>(json);
@@ -361,7 +361,7 @@ namespace PrototipoFinal.Pediatria
         public static async Task<List<PacientePediatrico>> BuscarPorNombre1(string nombre)
         {
             var localSettings = ApplicationData.Current.LocalSettings;
-            if (localSettings.Values.TryGetValue("HistoriasPediatricas", out object value))
+            if (localSettings.Values.TryGetValue("HistoriasPediatricas1", out object value))
             {
                 string json = value.ToString();
                 var todos = JsonConvert.DeserializeObject<List<PacientePediatrico>>(json);
