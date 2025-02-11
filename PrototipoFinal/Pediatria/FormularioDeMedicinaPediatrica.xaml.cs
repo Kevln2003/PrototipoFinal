@@ -118,7 +118,7 @@ namespace PrototipoFinal.Pediatria
 
                 // Guardar en LocalSettings
                 string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
-                localSettings.Values["RegistrosPediatricos"] = jsonDatos;
+                localSettings.Values["HistoriasPediatricas"] = jsonDatos;
 
                 // Generar/Actualizar archivo TXT de historia clínica
                 await GenerarHistoriaClinicaTXT(nuevoPaciente);
@@ -142,7 +142,7 @@ namespace PrototipoFinal.Pediatria
         {
             try
             {
-                var jsonDatos = localSettings.Values["RegistrosPediatricos"] as string;
+                var jsonDatos = localSettings.Values["HistoriasPediatricas"] as string;
                 return string.IsNullOrEmpty(jsonDatos)
                     ? new List<PacientePediatrico>()
                     : JsonConvert.DeserializeObject<List<PacientePediatrico>>(jsonDatos);
@@ -205,7 +205,7 @@ namespace PrototipoFinal.Pediatria
             registros.Add(nuevoPaciente);
 
             string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
-            localSettings.Values["RegistrosPediatricos"] = jsonDatos;
+            localSettings.Values["HistoriasPediatricas"] = jsonDatos;
         }
 
         private int CalcularEdad(DateTime fechaNacimiento)
