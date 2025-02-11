@@ -241,5 +241,38 @@ namespace PrototipoFinal.Plantilla
         {
             UpdateCalendar();
         }
+        private async void ViewAppointmentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (appointments.Count == 0)
+            {
+                await new ContentDialog
+                {
+                    Title = "Sin Citas",
+                    Content = "No hay citas agendadas.",
+                    CloseButtonText = "OK"
+                }.ShowAsync();
+                return;
+            }
+
+            var content = new StackPanel();
+
+            foreach (var appointment in appointments)
+            {
+                content.Children.Add(new TextBlock
+                {
+                    Text = $"{appointment.Date:dd/MM/yyyy} - {appointment.Time} - {appointment.PatientName} - {appointment.Area}",
+                    Margin = new Thickness(0, 5, 0, 5)
+                });
+            }
+
+            var dialog = new ContentDialog
+            {
+                Title = "Citas Agendadas",
+                Content = content,
+                CloseButtonText = "Cerrar"
+            };
+
+            await dialog.ShowAsync();
+        }
     }
 }
