@@ -18,7 +18,7 @@ namespace PrototipoFinal.Pediatria
     {
         private ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         private PacientePediatrico pacienteActual;
-        private readonly string historiasClinicasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasPediatricas1");
+        private readonly string historiasClinicasFolder = Path.Combine(ApplicationData.Current.LocalFolder.Path, "HistoriasPediatricas");
 
         public FormularioDeSguimientoPediatrico()
         {
@@ -224,7 +224,7 @@ namespace PrototipoFinal.Pediatria
             }
 
             string jsonDatos = JsonConvert.SerializeObject(registros, Formatting.Indented);
-            localSettings.Values["HistoriasPediatricas1"] = jsonDatos;
+            localSettings.Values["HistoriasPediatricas"] = jsonDatos;
         }
 
         private async Task MostrarArchivoTXT(string cedula)
@@ -261,7 +261,7 @@ namespace PrototipoFinal.Pediatria
 
         private List<PacientePediatrico> ObtenerRegistros()
         {
-            if (localSettings.Values.TryGetValue("HistoriasPediatricas1", out object value))
+            if (localSettings.Values.TryGetValue("HistoriasPediatricas", out object value))
             {
                 string json = value.ToString();
                 return JsonConvert.DeserializeObject<List<PacientePediatrico>>(json) ??

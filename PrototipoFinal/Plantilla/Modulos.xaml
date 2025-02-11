@@ -36,6 +36,21 @@
                                    Foreground="White"/>
                     </StackPanel>
                 </Button>
+                <Button Width="Auto" 
+         CornerRadius="10" 
+         Height="50" 
+         Margin="5"
+         Background="#795548" 
+         Foreground="White"
+         Click="Button_Click_5">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:FontAwesome Icon="Calendar" Width="20" Height="20" Margin="5" Foreground="White"/>
+                        <TextBlock Text="Agendamiento de cita" 
+                    VerticalAlignment="Center" 
+                    Margin="5,0,0,0" 
+                    Foreground="White"/>
+                    </StackPanel>
+                </Button>
 
                 <!-- Module Buttons with Consistent Styling -->
                 <Button Width="Auto" 
@@ -102,21 +117,7 @@
                     </StackPanel>
                 </Button>
 
-                <Button Width="Auto" 
-                        CornerRadius="10" 
-                        Height="50" 
-                        Margin="5"
-                        Background="#795548" 
-                        Foreground="White"
-                        Click="Button_Click_5">
-                    <StackPanel Orientation="Horizontal">
-                        <fa:FontAwesome Icon="Calendar" Width="20" Height="20" Margin="5" Foreground="White"/>
-                        <TextBlock Text="Agendamiento de cita" 
-                                   VerticalAlignment="Center" 
-                                   Margin="5,0,0,0" 
-                                   Foreground="White"/>
-                    </StackPanel>
-                </Button>
+               
 
                 <Button Width="Auto" 
                         CornerRadius="10" 

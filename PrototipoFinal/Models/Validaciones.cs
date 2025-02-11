@@ -80,6 +80,15 @@ namespace PrototipoFinal.Models
                 return false;
             }
         }
+        public static bool ValidarPeso(double peso)
+        {
+            return peso >= 30 && peso <= 250; // Rango típico de peso
+        }
+        // Valida la altura
+        public static bool ValidarAltura(double altura)
+        {
+            return altura >= 100 && altura <= 250; // Rango típico de altura
+        }
 
         // Método para validación en tiempo real de TextBox
         public static void ValidarTextBoxNumerico(TextBox textBox)

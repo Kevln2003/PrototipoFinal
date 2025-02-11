@@ -47,6 +47,8 @@ namespace PrototipoFinal.MedicinaDeportiva
                     return;
                 }
 
+
+
                 // Crear nuevo paciente con los datos del formulario
                 var nuevoPaciente = new PacienteDeportivo
                 {
@@ -84,6 +86,19 @@ namespace PrototipoFinal.MedicinaDeportiva
                 {
                     // Agregar nuevo registro
                     registros.Add(nuevoPaciente);
+                }
+
+                // Validar medidas antropométricas
+                if (!double.TryParse(txtPeso.Text, out double pesoValido) || !Validaciones.ValidarPeso(pesoValido))
+                {
+                    await MostrarError("El peso no es válido. Debe ser un número positivo y menor o igual a 300 kg.");
+                    return;
+                }
+
+                if (!double.TryParse(txtAltura.Text, out double alturaValida) || !Validaciones.ValidarAltura(alturaValida))
+                {
+                    await MostrarError("La altura no es válida. Debe ser un número positivo y menor o igual a 250 cm.");
+                    return;
                 }
 
                 // Guardar en LocalSettings
