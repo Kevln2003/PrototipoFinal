@@ -125,6 +125,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MedicinaDeportiva\BusquedaDeSegumientoDePacienteDeportivo.xaml.cs">
+      <DependentUpon>BusquedaDeSegumientoDePacienteDeportivo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MedicinaDeportiva\FormularioDeMedicinaDeportiva.xaml.cs">
       <DependentUpon>FormularioDeMedicinaDeportiva.xaml</DependentUpon>
     </Compile>
@@ -141,11 +144,15 @@
     <Compile Include="Models\AuditEvent.cs" />
     <Compile Include="Models\AuditLongger.cs" />
     <Compile Include="Models\DataService.cs" />
+    <Compile Include="Models\NavigationParameter.cs" />
     <Compile Include="Models\PacientePediatrico.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\PacienteDeportivo.cs" />
     <Compile Include="Models\TimeSlot.cs" />
     <Compile Include="Models\Validaciones.cs" />
+    <Compile Include="Pediatria\BusquedaDePacientePediatrico.xaml.cs">
+      <DependentUpon>BusquedaDePacientePediatrico.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pediatria\FormularioDeMedicinaPediatrica.xaml.cs">
       <DependentUpon>FormularioDeMedicinaPediatrica.xaml</DependentUpon>
     </Compile>
@@ -172,9 +179,6 @@
     </Compile>
     <Compile Include="Plantilla\Modulos.xaml.cs">
       <DependentUpon>Modulos.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Plantilla\SeguimientoDePacienteBusqueda.xaml.cs">
-      <DependentUpon>SeguimientoDePacienteBusqueda.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -251,6 +255,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="MedicinaDeportiva\BusquedaDeSegumientoDePacienteDeportivo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MedicinaDeportiva\FormularioDeMedicinaDeportiva.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -264,6 +272,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MedicinaDeportiva\OpcionesMedicinaDeportiva.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pediatria\BusquedaDePacientePediatrico.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -300,10 +312,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Plantilla\Modulos.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Plantilla\SeguimientoDePacienteBusqueda.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

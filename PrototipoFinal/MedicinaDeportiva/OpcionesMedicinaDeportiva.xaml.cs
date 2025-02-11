@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using PrototipoFinal.Models;
 using PrototipoFinal.Plantilla;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -35,7 +36,7 @@ namespace PrototipoFinal.MedicinaDeportiva
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(SeguimientoDePacienteBusqueda), "Deportiva");
+            Frame.Navigate(typeof(BusquedaDeSegumientoDePacienteDeportivo));
         }
     }
 }
